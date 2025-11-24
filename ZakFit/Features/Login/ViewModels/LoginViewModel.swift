@@ -9,37 +9,74 @@ import Foundation
 
 @Observable
 class LoginViewModel {
-    var errorMessage = ""
+    var errorMessage: String = ""
+    var isLoading: Bool = false
     
-    func loginUser(_ email: String, _ password: String) async throws {
-        let user = LoginRequest(email: email, password: password)
-        guard let url = URL(string: "http://localhost:8080/users/login") else { return }
+    func login(email: String, password: String) async {
+
+        guard validateInputs(email: email, password: password) else {
+            return
+        }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let encodedData = try JSONEncoder().encode(user)
-        request.httpBody = encodedData
+        isLoading = true
+        clearError()
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
+            let loginRequest = LoginRequest(email: email, password: password)
             
-            if let httpResponse = response as? HTTPURLResponse {
-                if (200...299).contains(httpResponse.statusCode) {
-                    let loginResponse = try JSONDecoder().decode(LoginResponse.self, from: data)
-                    print("Login successful for user \(user.email) with token \(loginResponse.token)")
-                } else {
-                    if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
-                        errorMessage = "Login failed: \(errorResponse.reason)"
-                    } else {
-                        errorMessage = "Login failed: \(httpResponse.statusCode)"
-                    }
-                }
-            }
+            let response: LoginResponse = try await NetworkService.shared.post(
+                endpoint: "/users/login",
+                body: loginRequest,
+                requiresAuth: false
+            )
+            
+            // Save token and update auth state using shared instance
+            try AuthManager.shared.markAsAuthenticated(token: response.token)
+            print("Login successful for user \(email)")
+            
+        } catch let error as NetworkError {
+            errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Network error: \(error.localizedDescription)"
-            print("Error: \(error)")
+            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
         }
+        
+        isLoading = false
+    }
+    
+    func logout() {
+        do {
+            try AuthManager.shared.logout()
+        } catch {
+            print("Error logging out: \(error.localizedDescription)")
+        }
+    }
+    
+    // Field validations
+    
+    func validateEmail(_ email: String) -> Bool {
+        return !email.isEmpty && email.contains("@")
+    }
+    
+    func validatePassword(_ password: String) -> Bool {
+        return !password.isEmpty
+    }
+    
+    func validateInputs(email: String, password: String) -> Bool {
+        if email.isEmpty || password.isEmpty {
+            errorMessage = "Veuillez remplir tous les champs"
+            return false
+        }
+        
+        if !validateEmail(email) {
+            errorMessage = "Adresse e-mail invalide"
+            return false
+        }
+        
+        return true
+    }
+    
+    // Clear error when user starts typing
+    func clearError() {
+        errorMessage = ""
     }
 }

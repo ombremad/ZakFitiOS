@@ -9,10 +9,9 @@ import SwiftUI
 
 struct LoginView: View {
     @State private var vm = LoginViewModel()
-    
+
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var isConnecting: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -21,23 +20,45 @@ struct LoginView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 128)
+                
                 VStack {
-                    if isConnecting {
+                    if vm.isLoading {
                         ProgressView()
                     } else {
                         TextField("E-mail", text: $email)
-                            .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
+                            .keyboardType(.emailAddress)
+                            .textContentType(.emailAddress)
+                            .submitLabel(.next)
+                            .onChange(of: email) {
+                                vm.clearError()
+                            }
+
                         SecureField("Mot de passe", text: $password)
-                        Text(vm.errorMessage)
+                            .textContentType(.password)
+                            .submitLabel(.go)
+                            .onChange(of: password) {
+                                vm.clearError()
+                            }
+                            .onSubmit {
+                                Task {
+                                    await vm.login(email: email, password: password)
+                                }
+                            }
+                        
+                        if !vm.errorMessage.isEmpty {
+                            Text(vm.errorMessage)
+                                .foregroundStyle(.red)
+                                .font(.caption)
+                                .multilineTextAlignment(.center)
+                        }
+
                         Button("Connexion") {
                             Task {
-                                isConnecting = true
-                                vm.errorMessage = ""
-                                try await vm.loginUser(email, password)
-                                isConnecting = false
+                                await vm.login(email: email, password: password)
                             }
                         }
+                        .disabled(vm.isLoading || email.isEmpty || password.isEmpty)
                     }
                 }
                 .frame(maxHeight: 300)
