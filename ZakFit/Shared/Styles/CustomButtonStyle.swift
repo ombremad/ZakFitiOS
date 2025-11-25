@@ -11,12 +11,13 @@ struct CustomButtonStyle: ButtonStyle {
     let state: ButtonState?
     
     enum ButtonState {
-        case normal, validate, cancel
+        case normal, highlight, validate, cancel
     }
     
     private func getTintColor() -> Color {
         switch state {
             case .normal: Color.Button.normal
+            case .highlight: Color.Button.highlight
             case .validate: Color.Button.validate
             case .cancel: Color.Button.cancel
             default: Color.Button.normal
@@ -26,6 +27,7 @@ struct CustomButtonStyle: ButtonStyle {
     private func getLabelColor() -> Color {
         switch state {
             case .normal: Color.Label.secondary
+            case .highlight: Color.Label.vibrant
             case .validate: Color.Label.vibrant
             case .cancel: Color.Label.vibrant
             default: Color.Label.secondary

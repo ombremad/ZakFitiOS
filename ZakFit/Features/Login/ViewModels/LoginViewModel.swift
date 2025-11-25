@@ -10,11 +10,17 @@ import Foundation
 @Observable
 class LoginViewModel {
     var errorMessage: String = ""
-    var isLoading: Bool = false
+    
     var formState: FormState = .login
     enum FormState { case login, signup }
     
-    // Main functions
+    var isLoading: Bool = false
+    
+    // Onboarding flow
+    var showOnboarding: Bool = false
+    var currentTab: Int = 0
+    
+    // Main login functions
     
     func login(formData: LoginFormData) async {
         isLoading = true
@@ -55,9 +61,8 @@ class LoginViewModel {
             return
         }
         
-        //Replace with actual signup process
         isLoading = false
-        errorMessage = "Signup complete"
+        showOnboarding = true
     }
     
     func logout() {

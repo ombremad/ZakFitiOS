@@ -82,7 +82,7 @@ struct LoginView: View {
                             }
                             .buttonStyle(CustomButtonStyle(state: .validate))
                             Button("Pas encore de compte ?") {
-                                vm.formState = .signup
+                                withAnimation { vm.formState = .signup }
                             }
                             .buttonStyle(CustomButtonStyle(state: .normal))
                             
@@ -94,7 +94,7 @@ struct LoginView: View {
                             }
                             .buttonStyle(CustomButtonStyle(state: .validate))
                             Button("J'ai déjà un compte") {
-                                vm.formState = .login
+                                withAnimation { vm.formState = .login }
                             }
                             .buttonStyle(CustomButtonStyle(state: .normal))
                         }
@@ -102,7 +102,11 @@ struct LoginView: View {
                     }
                     Spacer()
                 }
-            .padding()
+            .navigationDestination(isPresented: $vm.showOnboarding) {
+                OnboardingView(userData: formData)
+            }
+            .padding(.horizontal, 32)
+            .padding(.vertical)
             .textFieldStyle(CustomTextFieldStyle())
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {

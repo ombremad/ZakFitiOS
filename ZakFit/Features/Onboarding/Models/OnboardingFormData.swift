@@ -8,9 +8,9 @@
 import Foundation
 
 struct OnboardingFormData: Equatable {
-    var birthday: Date = .now
-    var sex: Bool = false
-    var weight: Int = 0
-    var height: Int = 0
+    var birthday: Date?
+    var sex: Bool?
+    var weight: Int?
+    var height: Int?
     var restrictions: [RestrictionType] = []
 }
