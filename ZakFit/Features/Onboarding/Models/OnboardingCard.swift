@@ -20,6 +20,6 @@ struct OnboardingCard<Content: View>: View {
                 .font(.callout)
                 .foregroundStyle(Color.Label.vibrant)
         }
-        .padding(.horizontal, 32)
+        .padding()
     }
 }

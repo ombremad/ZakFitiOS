@@ -105,8 +105,7 @@ struct LoginView: View {
             .navigationDestination(isPresented: $vm.showOnboarding) {
                 OnboardingView(userData: formData)
             }
-            .padding(.horizontal, 32)
-            .padding(.vertical)
+            .padding()
             .textFieldStyle(CustomTextFieldStyle())
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
