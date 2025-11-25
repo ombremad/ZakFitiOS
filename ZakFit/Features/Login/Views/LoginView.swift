@@ -10,61 +10,102 @@ import SwiftUI
 struct LoginView: View {
     @State private var vm = LoginViewModel()
 
-    @State private var email: String = ""
-    @State private var password: String = ""
+    // form values
+    @State private var formData = FormData()
+        
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Image(.logotypeMono)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 128)
-                
-                VStack {
-                    if vm.isLoading {
-                        ProgressView()
-                    } else {
-                        TextField("E-mail", text: $email)
-                            .textInputAutocapitalization(.never)
-                            .keyboardType(.emailAddress)
-                            .textContentType(.emailAddress)
-                            .submitLabel(.next)
-                            .onChange(of: email) {
-                                vm.clearError()
+            ScrollView {
+                VStack(spacing: 32) {
+                    Spacer()
+                    Image(.logotypeMono)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 128)
+                    
+                    VStack(spacing: 8) {
+                        if vm.isLoading {
+                            ProgressView()
+                        } else {
+                            if vm.formState == .signup {
+                                TextField("Prénom", text: $formData.firstName)
+                                    .textContentType(.givenName)
+                                    .submitLabel(.next)
+                                TextField("Nom", text: $formData.lastName)
+                                    .textContentType(.familyName)
+                                    .submitLabel(.next)
                             }
-
-                        SecureField("Mot de passe", text: $password)
-                            .textContentType(.password)
-                            .submitLabel(.go)
-                            .onChange(of: password) {
-                                vm.clearError()
+                            TextField("E-mail", text: $formData.email)
+                                .textInputAutocapitalization(.never)
+                                .keyboardType(.emailAddress)
+                                .textContentType(.emailAddress)
+                                .submitLabel(.next)
+                            
+                            SecureField("Mot de passe", text: $formData.password)
+                                .textContentType(vm.formState == .login ? .password : .newPassword)
+                                .submitLabel(vm.formState == .login ? .go : .next)
+                                .onSubmit {
+                                    if vm.formState == .login {
+                                        Task {
+                                            await vm.login(formData: formData)
+                                        }
+                                    }
+                                }
+                            
+                            if vm.formState == .signup {
+                                SecureField("Confirmer le mot de passe", text: $formData.passwordConfirmation)
+                                    .textContentType(.newPassword)
+                                    .submitLabel(.go)
+                                    .onSubmit {
+                                        Task {
+                                            await vm.signup(formData: formData)
+                                        }
+                                    }
                             }
-                            .onSubmit {
+                            
+                            if !vm.errorMessage.isEmpty {
+                                Text(vm.errorMessage)
+                                    .foregroundStyle(Color.Label.secondary)
+                                    .font(.callout)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                    }
+                    
+                    VStack(spacing: 8) {
+                        
+                        if vm.formState == .login {
+                            Button("Se connecter") {
                                 Task {
-                                    await vm.login(email: email, password: password)
+                                    await vm.login(formData: formData)
                                 }
                             }
-                        
-                        if !vm.errorMessage.isEmpty {
-                            Text(vm.errorMessage)
-                                .foregroundStyle(.red)
-                                .font(.caption)
-                                .multilineTextAlignment(.center)
-                        }
-
-                        Button("Connexion") {
-                            Task {
-                                await vm.login(email: email, password: password)
+                            .buttonStyle(CustomButtonStyle(state: .validate))
+                            Button("Pas encore de compte ?") {
+                                vm.formState = .signup
                             }
+                            .buttonStyle(CustomButtonStyle(state: .normal))
+                            
+                        } else if vm.formState == .signup {
+                            Button("S'inscrire") {
+                                Task {
+                                    await vm.signup(formData: formData)
+                                }
+                            }
+                            .buttonStyle(CustomButtonStyle(state: .validate))
+                            Button("J'ai déjà un compte") {
+                                vm.formState = .login
+                            }
+                            .buttonStyle(CustomButtonStyle(state: .normal))
                         }
-                        .disabled(vm.isLoading || email.isEmpty || password.isEmpty)
+                        
                     }
+                    Spacer()
                 }
-                .frame(maxHeight: 300)
+                .padding()
+                .textFieldStyle(CustomTextFieldStyle())
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 LinearGradient.primary
                     .ignoresSafeArea()

@@ -11,18 +11,22 @@ import Foundation
 class LoginViewModel {
     var errorMessage: String = ""
     var isLoading: Bool = false
+    var formState: FormState = .login
+    enum FormState { case login, signup }
     
-    func login(email: String, password: String) async {
+    // Main functions
+    
+    func login(formData: FormData) async {
+        isLoading = true
 
-        guard validateInputs(email: email, password: password) else {
+        guard validateForm(formData) else {
+            isLoading = false
             return
         }
         
-        isLoading = true
-        clearError()
         
         do {
-            let loginRequest = LoginRequest(email: email, password: password)
+            let loginRequest = LoginRequest(email: formData.email, password: formData.password)
             
             let response: LoginResponse = try await NetworkService.shared.post(
                 endpoint: "/users/login",
@@ -32,7 +36,7 @@ class LoginViewModel {
             
             // Save token and update auth state using shared instance
             try AuthManager.shared.markAsAuthenticated(token: response.token)
-            print("Login successful for user \(email)")
+            print("Login successful for user \(formData.email)")
             
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
@@ -43,40 +47,101 @@ class LoginViewModel {
         isLoading = false
     }
     
+    func signup(formData: FormData) async {
+        isLoading = true
+        
+        guard validateForm(formData) else {
+            isLoading = false
+            return
+        }
+        
+        //Replace with actual signup process
+        isLoading = false
+        errorMessage = "Signup complete"
+    }
+    
     func logout() {
         do {
             try AuthManager.shared.logout()
+            print("User logged out successfully")
         } catch {
             print("Error logging out: \(error.localizedDescription)")
         }
     }
     
-    // Field validations
+    // Field validators
     
-    func validateEmail(_ email: String) -> Bool {
-        return !email.isEmpty && email.contains("@")
-    }
-    
-    func validatePassword(_ password: String) -> Bool {
-        return !password.isEmpty
-    }
-    
-    func validateInputs(email: String, password: String) -> Bool {
-        if email.isEmpty || password.isEmpty {
-            errorMessage = "Veuillez remplir tous les champs"
+    func validateForm(_ formData: FormData) -> Bool {
+        errorMessage = ""
+        
+        if formState == .signup {
+            guard validateFirstName(formData.firstName) &&
+                    validateLastName(formData.lastName) else {
+                return false
+            }
+        }
+        
+        guard validateEmail(formData.email) && validatePassword(formData.password) else {
             return false
         }
         
-        if !validateEmail(email) {
-            errorMessage = "Adresse e-mail invalide"
-            return false
+        if formState == .signup {
+            guard validateMatchingPasswords(formData.password, formData.passwordConfirmation) else {
+                return false
+            }
         }
         
         return true
     }
     
-    // Clear error when user starts typing
-    func clearError() {
-        errorMessage = ""
+    func validateFirstName(_ firstName: String) -> Bool {
+        if firstName.isEmpty {
+            errorMessage = "Le prénom ne peut pas être vide."
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func validateLastName(_ lastName: String) -> Bool {
+        if lastName.isEmpty {
+            errorMessage = "Le nom de famille ne peut pas être vide."
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func validateEmail(_ email: String) -> Bool {
+        if email.isEmpty {
+            errorMessage = "L'adresse e-mail ne peut pas être vide."
+            return false
+        } else if !email.contains("@") || !email.contains(".") {
+            errorMessage = "Le format de l'adresse email n'est pas valide."
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func validatePassword(_ password: String) -> Bool {
+        if password.isEmpty {
+            errorMessage = "Le mot de passe ne peut pas être vide."
+            return false
+        } else if password.count < 6 {
+            errorMessage = "Le mot de passe doit faire au moins 6 caractères."
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func validateMatchingPasswords(_ password: String, _ passwordConfirmation: String) -> Bool {
+        if password != passwordConfirmation {
+            errorMessage = "Les mots de passe ne correspondent pas."
+            return false
+        } else {
+            return true
+        }
     }
 }
