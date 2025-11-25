@@ -23,16 +23,3 @@ struct OnboardingCard<Content: View>: View {
         .padding(.horizontal, 32)
     }
 }
-
-#Preview {
-    OnboardingCard {
-        Text("Pour commencer, nous allons avoir besoin de quelques informations de base pour configurer ton profil.")
-            .font(.smallTitle)
-        Text("Tu pourras changer ces informations à tout moment plus tard.")
-            .font(.smallTitle)
-    }
-    .background {
-        LinearGradient.accent
-            .ignoresSafeArea()
-    }
-}

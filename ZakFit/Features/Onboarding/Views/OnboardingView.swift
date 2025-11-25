@@ -24,118 +24,139 @@ struct OnboardingView: View {
         NavigationStack {
             TabView(selection: $vm.currentTab) {
                 
-                OnboardingCard {
-                    Text("Configuration")
-                        .font(.title)
-                    Text("Pour commencer, nous allons avoir besoin de quelques informations de base pour configurer ton profil.")
-                        .font(.smallTitle)
-                    Text("Tu pourras changer ces informations à tout moment plus tard.")
-                        .font(.smallTitle)
-                }
-                .tag(0)
-                
-                OnboardingCard {
-                    Text("Ma morphologie")
-                        .font(.title2)
+                    OnboardingCard {
+                        Text("Configuration")
+                            .font(.title)
+                        Text("Pour commencer, nous allons avoir besoin de quelques informations de base pour configurer ton profil.")
+                            .font(.smallTitle)
+                        Text("Tu pourras changer ces informations à tout moment plus tard.")
+                            .font(.smallTitle)
+                    }
+                    .tag(0)
                     
-                    GlassEffectContainer {
-                        VStack(spacing: 16) {
-                            InteractiveBox(label: "Date de naissance", state: .onboarding) {
-                                if let birthday = onboardingData.birthday {
-                                    Text(birthday.formatted(.dateTime.day(.twoDigits)))
-                                        .font(.cardDataSmall)
-                                    Text("/")
-                                        .font(.cardUnit)
-                                    Text(birthday.formatted(.dateTime.month(.twoDigits)))
-                                        .font(.cardDataSmall)
-                                    Text("/")
-                                        .font(.cardUnit)
-                                    Text(birthday.formatted(.dateTime.year()))
-                                        .font(.cardDataSmall)
+                    OnboardingCard {
+                        Text("Ma morphologie")
+                            .font(.title2)
+                        
+                        GlassEffectContainer {
+                            VStack(spacing: 16) {
+                                InteractiveBox(label: "Date de naissance", state: .onboarding) {
+                                    if let birthday = onboardingData.birthday {
+                                        Text(birthday.formatted(.dateTime.day(.twoDigits)))
+                                            .font(.cardDataSmall)
+                                        Text("/")
+                                            .font(.cardUnit)
+                                        Text(birthday.formatted(.dateTime.month(.twoDigits)))
+                                            .font(.cardDataSmall)
+                                        Text("/")
+                                            .font(.cardUnit)
+                                        Text(birthday.formatted(.dateTime.year()))
+                                            .font(.cardDataSmall)
+                                    }
                                 }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                showCalendar = true
-                            }
-                            
-                            InteractiveBox(label: "Sexe", state: .onboarding) {
-                                if let sex = onboardingData.sex {
-                                    Text(sex ? "H" : "F")
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    showCalendar = true
+                                }
+                                
+                                InteractiveBox(label: "Sexe", state: .onboarding) {
+                                    if let sex = onboardingData.sex {
+                                        Text(sex ? "H" : "F")
+                                            .font(.cardData)
+                                    }
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    showSexPicker = true
+                                }
+                                
+                                InteractiveBox(label: "Taille", state: .onboarding) {
+                                    TextField("", value: $onboardingData.height, format: .number)
                                         .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                        .keyboardType(.decimalPad)
+                                        .focused($focusedField, equals: .height)
+                                    Text("cm")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
                                 }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                showSexPicker = true
-                            }
-                                                        
-                            InteractiveBox(label: "Taille", state: .onboarding) {
-                                TextField("", value: $onboardingData.height, format: .number)
-                                    .font(.cardData)
-                                    .multilineTextAlignment(.trailing)
-                                    .keyboardType(.decimalPad)
-                                    .focused($focusedField, equals: .height)
-                                Text("cm")
-                                    .font(.cardUnit)
-                                    .offset(y: -5)
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                focusedField = .height
-                            }
-                            
-                            InteractiveBox(label: "Poids", state: .onboarding) {
-                                TextField("", value: $onboardingData.weight, format: .number)
-                                    .font(.cardData)
-                                    .multilineTextAlignment(.trailing)
-                                    .keyboardType(.decimalPad)
-                                    .focused($focusedField, equals: .weight)
-                                Text("kg")
-                                    .font(.cardUnit)
-                                    .offset(y: -5)
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                focusedField = .weight
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    focusedField = .height
+                                }
+                                
+                                InteractiveBox(label: "Poids", state: .onboarding) {
+                                    TextField("", value: $onboardingData.weight, format: .number)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                        .keyboardType(.decimalPad)
+                                        .focused($focusedField, equals: .weight)
+                                    Text("kg")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    focusedField = .weight
+                                }
                             }
                         }
+                        
+                        Text("Ces informations sont indispensables pour calculer les calories et macro-nutriments qui serviront de base à ton programme fitness et nutrition.")
+                            .font(.callout)
+                        
                     }
+                    .tag(1)
                     
-                    Text("Ces informations sont indispensables pour calculer les calories et macro-nutriments qui serviront de base à ton programme fitness et nutrition.")
-                        .font(.callout)
-
-                }
-                .tag(1)
-                
-                OnboardingCard {
-                    Text("là")
-                }
-                .tag(2)
-                
-                OnboardingCard {
-                    Text("ici")
-                }
-                .tag(3)
-
-                
-                OnboardingCard {
-                    VStack(alignment: .center, spacing: 48) {
-                        Image(.welcome)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 215)
-                        Button("Commencer") {}
-                            .buttonStyle(CustomButtonStyle(state: .highlight))
+                    OnboardingCard {
+                        Text("Mes restrictions alimentaires")
+                            .font(.title2)
+                        Text("Je ne consomme pas de...")
+                            .font(.caption)
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                            ForEach(vm.restrictionTypesAvailable) { type in
+                                Button(type.name) {
+                                    if onboardingData.restrictionTypes.contains(type) {
+                                        onboardingData.restrictionTypes.removeAll { $0.id == type.id }
+                                    } else {
+                                        onboardingData.restrictionTypes.append(type)
+                                    }
+                                }
+                                .buttonStyle(CustomButtonStyle(state: onboardingData.restrictionTypes.contains(type) ? .highlight : .normal))
+                            }
+                        }
+                        Text("Ces informations nous permettront de ne proposer que des aliments compatibles avec ton profil alimentaire.")
+                            .font(.callout)
                     }
-                }
-                .tag(4)
-                
+                    .tag(2)
+                    
+                    OnboardingCard {
+                        Text("ici")
+                    }
+                    .tag(3)
+                    
+                    
+                    OnboardingCard {
+                        VStack(alignment: .center, spacing: 48) {
+                            Image(.welcome)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 215)
+                            Button("Commencer") {}
+                                .buttonStyle(CustomButtonStyle(state: .highlight))
+                        }
+                    }
+                    .tag(4)
+                    
             }
             .navigationBarBackButtonHidden()
             .tabViewStyle(.page)
             .indexViewStyle(.page(backgroundDisplayMode: .interactive))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            .task {
+                await vm.fetchRestrictionTypes()
+            }
             
             .confirmationDialog("Sexe", isPresented: $showSexPicker) {
                 Button("Homme") {

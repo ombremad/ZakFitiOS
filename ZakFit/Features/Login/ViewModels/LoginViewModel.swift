@@ -15,11 +15,7 @@ class LoginViewModel {
     enum FormState { case login, signup }
     
     var isLoading: Bool = false
-    
-    // Onboarding flow
-    var showOnboarding: Bool = false
-    var currentTab: Int = 0
-    
+        
     // Main login functions
     
     func login(formData: LoginFormData) async {
@@ -29,7 +25,6 @@ class LoginViewModel {
             isLoading = false
             return
         }
-        
         
         do {
             let loginRequest = LoginRequest(email: formData.email, password: formData.password)
@@ -72,6 +67,29 @@ class LoginViewModel {
         } catch {
             print("Error logging out: \(error.localizedDescription)")
         }
+    }
+    
+    // Onboarding flow
+    var showOnboarding: Bool = false
+    var currentTab: Int = 0
+    var restrictionTypesAvailable: [RestrictionType] = []
+
+    func fetchRestrictionTypes() async {
+        isLoading = true
+        
+        do {
+            let response: [RestrictionTypeResponse] = try await NetworkService.shared.get(
+                endpoint: "/restrictionTypes",
+                requiresAuth: false
+            )
+            restrictionTypesAvailable = response.map(RestrictionType.init)
+        } catch let error as NetworkError {
+            errorMessage = error.localizedDescription
+        } catch {
+            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
+        }
+                
+        isLoading = false
     }
     
     // Field validators
