@@ -16,7 +16,7 @@ class LoginViewModel {
     
     // Main functions
     
-    func login(formData: FormData) async {
+    func login(formData: LoginFormData) async {
         isLoading = true
 
         guard validateForm(formData) else {
@@ -47,7 +47,7 @@ class LoginViewModel {
         isLoading = false
     }
     
-    func signup(formData: FormData) async {
+    func signup(formData: LoginFormData) async {
         isLoading = true
         
         guard validateForm(formData) else {
@@ -71,7 +71,7 @@ class LoginViewModel {
     
     // Field validators
     
-    func validateForm(_ formData: FormData) -> Bool {
+    func validateForm(_ formData: LoginFormData) -> Bool {
         errorMessage = ""
         
         if formState == .signup {

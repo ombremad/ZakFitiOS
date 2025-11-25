@@ -11,7 +11,7 @@ struct DashboardView: View {
     @State var vm = LoginViewModel()
     var body: some View {
         VStack {
-            Text("Connecté!")
+            Text("Connecté !")
             Button("Se déconnecter") {
                 Task {
                     vm.logout()

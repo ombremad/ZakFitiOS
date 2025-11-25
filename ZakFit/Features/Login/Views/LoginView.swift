@@ -11,12 +11,11 @@ struct LoginView: View {
     @State private var vm = LoginViewModel()
 
     // form values
-    @State private var formData = FormData()
+    @State private var formData = LoginFormData()
         
     
     var body: some View {
         NavigationStack {
-            ScrollView {
                 VStack(spacing: 32) {
                     Spacer()
                     Image(.logotypeMono)
@@ -103,9 +102,9 @@ struct LoginView: View {
                     }
                     Spacer()
                 }
-                .padding()
-                .textFieldStyle(CustomTextFieldStyle())
-            }
+            .padding()
+            .textFieldStyle(CustomTextFieldStyle())
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 LinearGradient.primary
                     .ignoresSafeArea()
