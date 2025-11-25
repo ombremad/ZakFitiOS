@@ -40,7 +40,7 @@ struct OnboardingView: View {
                         
                         GlassEffectContainer {
                             VStack(spacing: 16) {
-                                InteractiveBox(label: "Date de naissance", state: .onboarding) {
+                                DataBox(label: "Date de naissance", theme: .onboarding) {
                                     if let birthday = onboardingData.birthday {
                                         Text(birthday.formatted(.dateTime.day(.twoDigits)))
                                             .font(.cardDataSmall)
@@ -59,7 +59,7 @@ struct OnboardingView: View {
                                     showCalendar = true
                                 }
                                 
-                                InteractiveBox(label: "Sexe", state: .onboarding) {
+                                DataBox(label: "Sexe", theme: .onboarding) {
                                     if let sex = onboardingData.sex {
                                         Text(sex ? "H" : "F")
                                             .font(.cardData)
@@ -70,7 +70,7 @@ struct OnboardingView: View {
                                     showSexPicker = true
                                 }
                                 
-                                InteractiveBox(label: "Taille", state: .onboarding) {
+                                DataBox(label: "Taille", theme: .onboarding) {
                                     TextField("", value: $onboardingData.height, format: .number)
                                         .font(.cardData)
                                         .multilineTextAlignment(.trailing)
@@ -85,7 +85,7 @@ struct OnboardingView: View {
                                     focusedField = .height
                                 }
                                 
-                                InteractiveBox(label: "Poids", state: .onboarding) {
+                                DataBox(label: "Poids", theme: .onboarding) {
                                     TextField("", value: $onboardingData.weight, format: .number)
                                         .font(.cardData)
                                         .multilineTextAlignment(.trailing)
@@ -131,7 +131,38 @@ struct OnboardingView: View {
                     .tag(2)
                     
                     OnboardingCard {
-                        Text("ici")
+                        Text("Mon programme")
+                            .font(.title2)
+                        GlassEffectContainer {
+                            DataBox(label: "Apport calorique par jour", theme: .onboarding) {
+                                Text("2500")
+                                    .font(.cardData)
+                                Text("cal")
+                                    .font(.cardUnit)
+                                    .offset(y: -5)
+                            }
+                            HStack {
+                                DataBox(label: "Protéines", theme: .onboarding) {
+                                    VStack {
+                                        HStack {
+                                            Text("30")
+                                                .font(.cardData)
+                                            Text("%")
+                                                .font(.cardUnit)
+                                                .offset(y: -5)
+                                        }
+                                        Text("1000 cal")
+                                            .font(.cardUnit)
+                                    }
+                                }
+                                DataBox(label: "Lipides", theme: .onboarding) {
+                                }
+                                DataBox(label: "Glucides", theme: .onboarding) {
+                                }
+                            }
+                        }
+                        Text("Définis ton objectif principal, ZakFit t’aidera à l’atteindre !")
+                            .font(.callout)
                     }
                     .tag(3)
                     
