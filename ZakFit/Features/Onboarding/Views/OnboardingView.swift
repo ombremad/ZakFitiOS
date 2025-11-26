@@ -128,6 +128,13 @@ struct OnboardingView: View {
                 .font(.callout)
         }
     }
+    private var stepProgram: some View {
+        OnboardingCard {
+            Text("Mon programme")
+                .font(.title2)
+            Text("Calculated BMR: " + vm.bmr.description)
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -140,7 +147,7 @@ struct OnboardingView: View {
                                 case 0: stepWelcome
                                 case 1: stepMorphology
                                 case 2: stepRestrictions
-                                case 3: EmptyView()
+                                case 3: stepProgram
                                 case 4: EmptyView()
                                 default: EmptyView()
                             }
@@ -240,6 +247,6 @@ struct OnboardingView: View {
         firstName: "Anne",
         lastName: "Ferret",
         email: "my@email.com",
-        password: ""
+        password: "preview user"
     ))
 }

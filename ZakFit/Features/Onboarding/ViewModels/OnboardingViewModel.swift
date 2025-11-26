@@ -16,6 +16,7 @@ class OnboardingViewModel {
     
     var currentStep: Int = 0
     var restrictionTypesAvailable: [RestrictionType] = []
+    var bmr: Int = 0
     
     func fetchRestrictionTypes() async {
         isLoading = true
@@ -38,6 +39,7 @@ class OnboardingViewModel {
     func nextStep(formData: OnboardingFormData) {
         if currentStep == 1 {
             guard validateMorphologyForm(formData) else { return }
+            bmr = calculateBMR(birthday: formData.birthday!, sex: formData.sex!, height: formData.height!, weight: formData.weight!)
         }
         currentStep += 1
     }
