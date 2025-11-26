@@ -9,18 +9,16 @@ import SwiftUI
 
 @main
 struct ZakFitApp: App {
-    @State private var authManager = AuthManager.shared
-
     var body: some Scene {
         WindowGroup {
             Group {
-                if authManager.isAuthenticated {
+                if AuthManager.shared.isAuthenticated {
                     DashboardView()
                 } else {
                     LoginView()
                 }
             }
-            .environment(authManager)
+            .environment(AuthManager.shared)
         }
     }
 }

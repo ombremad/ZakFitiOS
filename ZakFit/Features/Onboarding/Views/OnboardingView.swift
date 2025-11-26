@@ -22,12 +22,16 @@ struct OnboardingView: View {
     // Steps
     private var stepIntro: some View {
         OnboardingCard {
-            Text("Configuration")
-                .font(.title)
-            Text("Pour commencer, nous allons avoir besoin de quelques informations de base pour configurer ton profil.")
-                .font(.smallTitle)
-            Text("Tu pourras changer ces informations à tout moment plus tard.")
-                .font(.smallTitle)
+            if vm.isLoading {
+                ProgressView()
+            } else {
+                Text("Configuration")
+                    .font(.title)
+                Text("Pour commencer, nous allons avoir besoin de quelques informations de base pour configurer ton profil.")
+                    .font(.smallTitle)
+                Text("Tu pourras changer ces informations à tout moment plus tard.")
+                    .font(.smallTitle)
+            }
         }
     }
     private var stepMorphology: some View {
@@ -111,16 +115,18 @@ struct OnboardingView: View {
                 .font(.title2)
             Text("Je ne consomme pas de...")
                 .font(.caption)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
-                ForEach(vm.restrictionTypesAvailable) { type in
-                    Button(type.name) {
-                        if onboardingData.restrictionTypes.contains(type) {
-                            onboardingData.restrictionTypes.removeAll { $0.id == type.id }
-                        } else {
-                            onboardingData.restrictionTypes.append(type)
+            GlassEffectContainer {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                    ForEach(vm.restrictionTypesAvailable) { type in
+                        Button(type.name) {
+                            if onboardingData.restrictionTypes.contains(type) {
+                                onboardingData.restrictionTypes.removeAll { $0.id == type.id }
+                            } else {
+                                onboardingData.restrictionTypes.append(type)
+                            }
                         }
+                        .buttonStyle(CustomButtonStyle(state: onboardingData.restrictionTypes.contains(type) ? .highlight : .normal, width: .full))
                     }
-                    .buttonStyle(CustomButtonStyle(state: onboardingData.restrictionTypes.contains(type) ? .highlight : .normal))
                 }
             }
             Text("Ces informations nous permettront de ne proposer que des aliments compatibles avec ton profil alimentaire.")
@@ -262,8 +268,16 @@ struct OnboardingView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 215)
-                Button("Commencer") {}
+                if vm.isLoading {
+                    ProgressView()
+                } else {
+                    Button("Commencer") {
+                        Task {
+                            await vm.signup(userData: userData, formData: onboardingData)
+                        }
+                    }
                     .buttonStyle(CustomButtonStyle(state: .highlight))
+                }
             }
         }
     }

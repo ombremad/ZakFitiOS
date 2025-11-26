@@ -39,7 +39,50 @@ class OnboardingViewModel {
             bmr = calculateBMR(birthday: formData.birthday!, sex: formData.sex!, height: formData.height!, weight: formData.weight!)
             calculateRepartition()
         }
+        if currentStep == 3 {
+            guard validateProgramForm() else { return }
+        }
         currentStep += 1
+    }
+    
+    func signup(userData: LoginFormData, formData: OnboardingFormData) async {
+        isLoading = true
+        
+        do {
+            let signupRequest = SignupRequest(
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+                password: userData.password,
+                birthday: formData.birthday!,
+                height: formData.height!,
+                weight: formData.weight!,
+                sex: formData.sex!,
+                bmr: bmr,
+                goalCals: bmr,
+                goalCarbs: carbsDaily,
+                goalFats: fatsDaily,
+                goalProts: protsDaily,
+                restrictionTypeIds: formData.restrictionTypes.map(\.id)
+            )
+            
+            let response: LoginResponse = try await NetworkService.shared.post(
+                endpoint: "/users/signup",
+                body: signupRequest,
+                requiresAuth: false
+            )
+            
+            // Save token and update auth state using shared instance
+            try AuthManager.shared.markAsAuthenticated(token: response.token)
+            print("Signup successful for user \(userData.email)")
+            
+        } catch let error as NetworkError {
+            errorMessage = error.localizedDescription
+        } catch {
+            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
+        }
+        
+        isLoading = false
     }
     
     func calculateRepartition() {
@@ -67,6 +110,7 @@ class OnboardingViewModel {
         protsDaily = bmr * protsPercentage / 100
     }
     
+    // Field validation
     func validateMorphologyForm(_ formData: OnboardingFormData) -> Bool {
         errorMessage = ""
         
@@ -97,6 +141,25 @@ class OnboardingViewModel {
         return true
     }
     
+    func validateProgramForm() -> Bool {
+        errorMessage = ""
+        
+        let bmrResult = validation.validateBmr(bmr)
+        if !bmrResult.isValid {
+            errorMessage = bmrResult.errorMessage ?? ""
+            return false
+        }
+        
+        let percentageResult = validation.validatePercentage(carbsPercentage + fatsPercentage + protsPercentage)
+        if !percentageResult.isValid {
+            errorMessage = percentageResult.errorMessage ?? ""
+            return false
+        }
+        
+        return true
+    }
+    
+    // Fetch restriction types with API
     func fetchRestrictionTypes() async {
         isLoading = true
         

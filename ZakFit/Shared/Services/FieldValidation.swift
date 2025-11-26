@@ -93,6 +93,20 @@ final class FieldValidation {
         }
         return .failure("Le poids est obligatoire.")
     }
+    
+    func validateBmr(_ bmr: Int) -> ValidationResult {
+        if bmr < 50 || bmr > 9000 {
+            return .failure("Le nombre de calories par jour doit être réaliste.")
+        }
+        return .success
+    }
+    
+    func validatePercentage(_ percentage: Int) -> ValidationResult {
+        if percentage != 100 {
+            return .failure("Vérifiez que le pourcentage total équivaut à 100 %.")
+        }
+        return .success
+    }
 }
 
 enum ValidationResult {
