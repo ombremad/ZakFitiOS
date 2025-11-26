@@ -9,12 +9,14 @@ import Foundation
 
 @Observable
 class LoginViewModel {
+    private let validation = FieldValidation.shared
+    
+    var isLoading: Bool = false
     var errorMessage: String = ""
     
     var formState: FormState = .login
     enum FormState { case login, signup }
-    
-    var isLoading: Bool = false
+    var showOnboarding: Bool = false
         
     // Main login functions
     
@@ -69,102 +71,48 @@ class LoginViewModel {
         }
     }
     
-    // Onboarding flow
-    var showOnboarding: Bool = false
-    var currentTab: Int = 0
-    var restrictionTypesAvailable: [RestrictionType] = []
-
-    func fetchRestrictionTypes() async {
-        isLoading = true
-        
-        do {
-            let response: [RestrictionTypeResponse] = try await NetworkService.shared.get(
-                endpoint: "/restrictionTypes",
-                requiresAuth: false
-            )
-            restrictionTypesAvailable = response.map(RestrictionType.init)
-        } catch let error as NetworkError {
-            errorMessage = error.localizedDescription
-        } catch {
-            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
-        }
-                
-        isLoading = false
-    }
-    
-    // Field validators
+    // Field validation
     
     func validateForm(_ formData: LoginFormData) -> Bool {
         errorMessage = ""
         
         if formState == .signup {
-            guard validateFirstName(formData.firstName) &&
-                    validateLastName(formData.lastName) else {
+            let firstNameResult = validation.validateFirstName(formData.firstName)
+            if !firstNameResult.isValid {
+                errorMessage = firstNameResult.errorMessage ?? ""
+                return false
+            }
+            
+            let lastNameResult = validation.validateLastName(formData.lastName)
+            if !lastNameResult.isValid {
+                errorMessage = lastNameResult.errorMessage ?? ""
                 return false
             }
         }
         
-        guard validateEmail(formData.email) && validatePassword(formData.password) else {
+        let emailResult = validation.validateEmail(formData.email)
+        if !emailResult.isValid {
+            errorMessage = emailResult.errorMessage ?? ""
+            return false
+        }
+        
+        let passwordResult = validation.validatePassword(formData.password)
+        if !passwordResult.isValid {
+            errorMessage = passwordResult.errorMessage ?? ""
             return false
         }
         
         if formState == .signup {
-            guard validateMatchingPasswords(formData.password, formData.passwordConfirmation) else {
+            let matchResult = validation.validateMatchingPasswords(
+                formData.password,
+                formData.passwordConfirmation
+            )
+            if !matchResult.isValid {
+                errorMessage = matchResult.errorMessage ?? ""
                 return false
             }
         }
         
         return true
-    }
-    
-    func validateFirstName(_ firstName: String) -> Bool {
-        if firstName.isEmpty {
-            errorMessage = "Le prénom ne peut pas être vide."
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func validateLastName(_ lastName: String) -> Bool {
-        if lastName.isEmpty {
-            errorMessage = "Le nom de famille ne peut pas être vide."
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func validateEmail(_ email: String) -> Bool {
-        if email.isEmpty {
-            errorMessage = "L'adresse e-mail ne peut pas être vide."
-            return false
-        } else if !email.contains("@") || !email.contains(".") {
-            errorMessage = "Le format de l'adresse email n'est pas valide."
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func validatePassword(_ password: String) -> Bool {
-        if password.isEmpty {
-            errorMessage = "Le mot de passe ne peut pas être vide."
-            return false
-        } else if password.count < 6 {
-            errorMessage = "Le mot de passe doit faire au moins 6 caractères."
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func validateMatchingPasswords(_ password: String, _ passwordConfirmation: String) -> Bool {
-        if password != passwordConfirmation {
-            errorMessage = "Les mots de passe ne correspondent pas."
-            return false
-        } else {
-            return true
-        }
     }
 }
