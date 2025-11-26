@@ -31,7 +31,6 @@ struct OnboardingView: View {
                 .font(.smallTitle)
         }
     }
-    
     private var stepMorphology: some View {
         OnboardingCard {
             Text("Ma morphologie")
@@ -107,7 +106,6 @@ struct OnboardingView: View {
                 .font(.callout)
         }
     }
-    
     private var stepRestrictions: some View {
         OnboardingCard {
             Text("Mes restrictions alimentaires")
@@ -131,8 +129,6 @@ struct OnboardingView: View {
         }
     }
 
-
-
     var body: some View {
         NavigationStack {
             ZStack {
@@ -149,6 +145,7 @@ struct OnboardingView: View {
                                 default: EmptyView()
                             }
                         }
+                        .transition(.push(from: .bottom))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .animation(.easeInOut(duration: 0.3), value: vm.currentStep)
