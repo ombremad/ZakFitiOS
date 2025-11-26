@@ -12,26 +12,23 @@ struct DataBox<Content: View>: View {
     let content: Content
     var theme: DataBoxTheme
     var icon: DataBoxIcon
-    var isInteractive: Bool
     
     enum DataBoxTheme {
         case normal, onboarding
     }
     enum DataBoxIcon {
-        case none, numbers, calendar, list
+        case none, numbers, calendar, list, slider
     }
             
     init(
         label: String,
         theme: DataBoxTheme = .normal,
         icon: DataBoxIcon = .none,
-        isInteractive: Bool = true,
         @ViewBuilder content: () -> Content
     ) {
         self.label = label
         self.theme = theme
         self.icon = icon
-        self.isInteractive = isInteractive
         self.content = content()
     }
     
@@ -40,22 +37,25 @@ struct DataBox<Content: View>: View {
             case .numbers: return "numbers.rectangle"
             case .calendar: return "calendar"
             case .list: return "list.bullet"
+            case .slider: return "chevron.left.chevron.right"
             default: return ""
         }
     }
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 Text(label)
                     .font(.cardTitle)
                 Spacer()
-                Image(systemName: getIconName())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 22)
+                if icon != .none {
+                    Image(systemName: getIconName())
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 22)
+                }
             }
-            Spacer()
+            Spacer(minLength: 0)
             HStack(alignment: .bottom, spacing: 6) {
                 Spacer()
                 self.content
@@ -65,6 +65,7 @@ struct DataBox<Content: View>: View {
         .frame(height: 60)
         .padding(16)
         .glassEffect(theme == .onboarding ? .clear.interactive() : .regular.interactive(), in: .rect(cornerRadius: 25))
+        .contentShape(RoundedRectangle(cornerRadius: 25))
         .shadow(radius: 4)
     }
 }
@@ -72,14 +73,14 @@ struct DataBox<Content: View>: View {
 #Preview {
     VStack {
         HStack {
-            DataBox(label: "Poids", theme: .normal, isInteractive: false) {
+            DataBox(label: "Poids", theme: .normal) {
                 Text("66")
                     .font(.cardData)
                 Text("kg")
                     .font(.cardUnit)
                     .offset(y: -5)
             }
-            DataBox(label: "Poids", theme: .normal, isInteractive: false) {
+            DataBox(label: "Poids", theme: .normal) {
                 Text("66")
                     .font(.cardData)
                 Text("kg")
@@ -92,7 +93,7 @@ struct DataBox<Content: View>: View {
             .background {
                 Color.App.background
             }
-        DataBox(label: "Poids", theme: .normal, icon: .numbers) {
+        DataBox(label: "Poids", theme: .normal) {
             Text("66")
                 .font(.cardData)
             Text("kg")
@@ -104,7 +105,7 @@ struct DataBox<Content: View>: View {
             .background {
                 LinearGradient.tropical
             }
-        DataBox(label: "Poids", theme: .onboarding, icon: .numbers) {
+        DataBox(label: "Poids", theme: .onboarding) {
             Text("66")
                 .font(.cardData)
             Text("kg")

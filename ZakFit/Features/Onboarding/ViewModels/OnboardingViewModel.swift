@@ -24,6 +24,9 @@ class OnboardingViewModel {
     var carbsDaily: Int = 0
     var fatsDaily: Int = 0
     var protsDaily: Int = 0
+    var nutritionValues: Int {
+        bmr + carbsPercentage + fatsPercentage + protsPercentage
+    }
     
     var fitnessProgram: FitnessProgram = .maintain
     enum FitnessProgram {
@@ -34,11 +37,13 @@ class OnboardingViewModel {
         if currentStep == 1 {
             guard validateMorphologyForm(formData) else { return }
             bmr = calculateBMR(birthday: formData.birthday!, sex: formData.sex!, height: formData.height!, weight: formData.weight!)
+            calculateRepartition()
         }
         currentStep += 1
     }
     
     func calculateRepartition() {
+        bmr = 2500  // DEBUG
         switch fitnessProgram {
             case .gainMass:
                 carbsPercentage = 45
@@ -53,7 +58,10 @@ class OnboardingViewModel {
                 fatsPercentage = 30
                 protsPercentage = 30
         }
-        
+        calculateDailyValues()
+    }
+    
+    func calculateDailyValues() {
         carbsDaily = bmr * carbsPercentage / 100
         fatsDaily = bmr * fatsPercentage / 100
         protsDaily = bmr * protsPercentage / 100

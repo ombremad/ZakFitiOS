@@ -35,23 +35,17 @@ struct CustomButtonStyle: ButtonStyle {
     }
     
     func makeBody(configuration: Configuration) -> some View {
-        VStack {
-            if width == .full { Spacer() }
-            HStack {
-                if width == .full { Spacer() }
-                configuration.label
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                if width == .full { Spacer() }
-            }
-            if width == .full { Spacer() }
-        }
-            .frame(height: width == .full ? 60 : .infinity)
-            .padding(.vertical, width == .full ? 1 : 8)
-            .padding(.horizontal, width == .full ? 1 : 16)
+        configuration.label
+            .multilineTextAlignment(.center)
+            .lineLimit(width == .full ? 2 : 1)
+            .frame(maxWidth: width == .full ? .infinity : nil, maxHeight: width == .full ? .infinity : nil)
+            .frame(height: width == .full ? 60 : nil)
+            .padding(.vertical, width == .full ? 1 : 14)
+            .padding(.horizontal, width == .full ? 8 : 24)
             .font(.buttonLabel)
             .foregroundStyle(getLabelColor())
             .glassEffect(.clear.tint(getTintColor()).interactive())
+            .contentShape(Capsule())
             .clipShape(Capsule())
     }
 }

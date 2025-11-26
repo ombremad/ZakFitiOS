@@ -17,10 +17,10 @@ struct OnboardingView: View {
     // UX values
     @State private var showCalendar = false
     @FocusState private var focusedField: Field?
-    enum Field { case height, weight }
+    enum Field { case height, weight, cals }
     
     // Steps
-    private var stepWelcome: some View {
+    private var stepIntro: some View {
         OnboardingCard {
             Text("Configuration")
                 .font(.title)
@@ -51,7 +51,6 @@ struct OnboardingView: View {
                                 .font(.cardDataSmall)
                         }
                     }
-                    .contentShape(Rectangle())
                     .onTapGesture {
                         showCalendar = true
                     }
@@ -81,7 +80,6 @@ struct OnboardingView: View {
                             .font(.cardUnit)
                             .offset(y: -5)
                     }
-                    .contentShape(Rectangle())
                     .onTapGesture {
                         focusedField = .height
                     }
@@ -97,7 +95,6 @@ struct OnboardingView: View {
                             .font(.cardUnit)
                             .offset(y: -5)
                     }
-                    .contentShape(Rectangle())
                     .onTapGesture {
                         focusedField = .weight
                     }
@@ -134,19 +131,140 @@ struct OnboardingView: View {
         OnboardingCard {
             Text("Mon programme")
                 .font(.title2)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
-                Button("Prise de masse") { vm.fitnessProgram = .gainMass }
-                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .gainMass ? .highlight : .normal, width: .full))
-                Button("Maintien") { vm.fitnessProgram = .maintain }
-                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .maintain ? .highlight : .normal, width: .full))
-                Button("Perte de poids") { vm.fitnessProgram = .loseWeight }
-                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .loseWeight ? .highlight : .normal, width: .full))
-                Button("Personnalisé") { vm.fitnessProgram = .custom }
+            GlassEffectContainer {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                    Button("Prise de masse") { vm.fitnessProgram = .gainMass }
+                        .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .gainMass ? .highlight : .normal, width: .full))
+                    Button("Maintien") { vm.fitnessProgram = .maintain }
+                        .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .maintain ? .highlight : .normal, width: .full))
+                    Button("Perte de poids") { vm.fitnessProgram = .loseWeight }
+                        .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .loseWeight ? .highlight : .normal, width: .full))
+                }
+                Button("Programme personnalisé") { vm.fitnessProgram = .custom }
                     .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .custom ? .highlight : .normal, width: .full))
             }
+            Text("Valeurs")
+                .font(.smallTitle)
+            VStack {
+                DataBox(label: "Apport calorique par jour", theme: .onboarding, icon: vm.fitnessProgram == .custom ? .numbers : .none) {
+                    Group {
+                        if vm.fitnessProgram == .custom {
+                            TextField("", value: $vm.bmr, format: .number)
+                        } else {
+                            Text(vm.bmr.description)
+                        }
+                    }
+                    .font(.cardData)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(.decimalPad)
+                    .submitLabel(.go)
+                    .focused($focusedField, equals: .cals)
+                    Text("cal")
+                        .font(.cardUnit)
+                        .offset(y: -5)
+                }
+                .onTapGesture {
+                    focusedField = .cals
+                }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: vm.fitnessProgram == .custom ? 300: 100))], spacing: 16) {
+                    DataBox(label: "Glucides", theme: .onboarding, icon: vm.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.carbsPercentage) },
+                                        set: { vm.carbsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.carbsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.carbsDaily.description + " cal")
+                            }
+                        }
+                    }
+                    DataBox(label: "Lipides", theme: .onboarding, icon: vm.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.fatsPercentage) },
+                                        set: { vm.fatsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.fatsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.fatsDaily.description + " cal")
+                            }
+                        }
+                    }
+                    DataBox(label: "Protéines", theme: .onboarding, icon: vm.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.protsPercentage) },
+                                        set: { vm.protsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.protsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.protsDaily.description + " cal")
+                            }
+                        }
+                    }
+                }
+            }
+            .onChange(of: vm.fitnessProgram) {
+                vm.calculateRepartition()
+            }
+            .onChange(of: vm.nutritionValues) {
+                vm.calculateDailyValues()
+            }
         }
-        .onChange(of: vm.fitnessProgram) {
-            vm.calculateRepartition()
+    }
+    private var stepConfirm: some View {
+        OnboardingCard {
+            VStack(alignment: .center, spacing: 64) {
+                Image(.welcome)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 215)
+                Button("Commencer") {}
+                    .buttonStyle(CustomButtonStyle(state: .highlight))
+            }
         }
     }
 
@@ -158,16 +276,15 @@ struct OnboardingView: View {
                     ZStack {
                         Group {
                             switch vm.currentStep {
-                                case 0: stepProgram
-//                                case 0: stepWelcome
+                                case 0: stepIntro
                                 case 1: stepMorphology
                                 case 2: stepRestrictions
                                 case 3: stepProgram
-                                case 4: EmptyView()
+                                case 4: stepConfirm
                                 default: EmptyView()
                             }
                         }
-                        .transition(.push(from: .bottom))
+                        .transition(.push(from: .top))
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .animation(.easeInOut(duration: 0.3), value: vm.currentStep)
