@@ -15,7 +15,6 @@ struct OnboardingView: View {
     @State private var onboardingData = OnboardingFormData()
     
     // UX values
-    @State private var showSexPicker = false
     @State private var showCalendar = false
     @FocusState private var focusedField: Field?
     enum Field { case height, weight }
@@ -57,15 +56,18 @@ struct OnboardingView: View {
                         showCalendar = true
                     }
                     
-                    DataBox(label: "Sexe", theme: .onboarding, icon: .list) {
-                        if let sex = onboardingData.sex {
-                            Text(sex ? "H" : "F")
-                                .font(.cardData)
+                    Menu {
+                        Picker("Sexe", selection: $onboardingData.sex) {
+                            Text("Homme").tag(true)
+                            Text("Femme").tag(false)
                         }
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        showSexPicker = true
+                    } label: {
+                        DataBox(label: "Sexe", theme: .onboarding, icon: .list) {
+                            if let sex = onboardingData.sex {
+                                Text(sex ? "H" : "F")
+                                    .font(.cardData)
+                            }
+                        }
                     }
                     
                     DataBox(label: "Taille", theme: .onboarding, icon: .numbers) {
@@ -186,33 +188,28 @@ struct OnboardingView: View {
                 await vm.fetchRestrictionTypes()
             }
             
-            .confirmationDialog("Sexe", isPresented: $showSexPicker) {
-                Button("Homme") {
-                    onboardingData.sex = true
-                }
-                Button("Femme") {
-                    onboardingData.sex = false
-                }
-            }
-            
             .sheet(isPresented: $showCalendar) {
                 VStack {
                     DatePicker("", selection: Binding(
-                        get: { onboardingData.birthday ?? Date() },
+                        get: {
+                            onboardingData.birthday ?? Calendar.current.date(
+                                from: DateComponents(year: 2000, month: 1, day: 1)
+                            )!
+                        },
                         set: { onboardingData.birthday = $0 }
                     ), displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .padding()
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity, alignment: .center)
                     
                     Button("Valider") {
                         showCalendar = false
                     }
                     .buttonStyle(CustomButtonStyle(state: .validate))
-                    .padding()
                 }
-                .presentationDetents([.fraction(0.6)])
+                .presentationDetents([.fraction(0.35)])
             }
-
+            
             .toolbar {
                 if vm.currentStep > 0 {
                     ToolbarItem(placement: .topBarLeading) {
