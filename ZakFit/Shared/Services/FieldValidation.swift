@@ -50,6 +50,49 @@ final class FieldValidation {
         }
         return .success
     }
+    
+    func validateBirthday(_ date: Date?) -> ValidationResult {
+        if let date = date {
+            let calendar = Calendar.current
+            let today = Date()
+            let ageComponents = calendar.dateComponents([.year], from: date, to: today)
+            
+            if let age = ageComponents.year, age > 120 {
+                return .failure("Vous devez entrer une date de naissance raisonnable.")
+            } else if let age = ageComponents.year, age < 14 {
+                return .failure("Vous devez avoir au moins 14 ans pour vous inscrire.")
+            }
+            return .success
+        }
+        return .failure("La date de naissance est obligatoire.")
+    }
+    
+    func validateSex(_ sex: Bool?) -> ValidationResult {
+        if sex != nil {
+            return .success
+        }
+        return .failure("Le sexe est obligatoire.")
+    }
+    
+    func validateHeight(_ height: Int?) -> ValidationResult {
+        if let height = height {
+            if height < 80 || height > 260 {
+                return .failure("La taille doit être raisonnable.")
+            }
+            return .success
+        }
+        return .failure("La taille est obligatoire.")
+    }
+    
+    func validateWeight(_ weight: Int?) -> ValidationResult {
+        if let weight = weight {
+            if weight < 20 || weight > 200 {
+                return .failure("Le poids doit être raisonnable.")
+            }
+            return .success
+        }
+        return .failure("Le poids est obligatoire.")
+    }
 }
 
 enum ValidationResult {

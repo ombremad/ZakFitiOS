@@ -9,6 +9,8 @@ import Foundation
 
 @Observable
 class OnboardingViewModel {
+    private let validation = FieldValidation.shared
+
     var isLoading: Bool = false
     var errorMessage: String = ""
     
@@ -31,5 +33,42 @@ class OnboardingViewModel {
         }
         
         isLoading = false
+    }
+    
+    func nextStep(formData: OnboardingFormData) {
+        if currentStep == 1 {
+            guard validateMorphologyForm(formData) else { return }
+        }
+        currentStep += 1
+    }
+    
+    func validateMorphologyForm(_ formData: OnboardingFormData) -> Bool {
+        errorMessage = ""
+        
+        let birthdayResult = validation.validateBirthday(formData.birthday)
+        if !birthdayResult.isValid {
+            errorMessage = birthdayResult.errorMessage ?? ""
+            return false
+        }
+        
+        let sexResult = validation.validateSex(formData.sex)
+        if !sexResult.isValid {
+            errorMessage = sexResult.errorMessage ?? ""
+            return false
+        }
+
+        let heightResult = validation.validateHeight(formData.height)
+        if !heightResult.isValid {
+            errorMessage = heightResult.errorMessage ?? ""
+            return false
+        }
+        
+        let weightResult = validation.validateWeight(formData.weight)
+        if !weightResult.isValid {
+            errorMessage = weightResult.errorMessage ?? ""
+            return false
+        }
+
+        return true
     }
 }

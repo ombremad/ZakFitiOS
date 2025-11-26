@@ -89,7 +89,7 @@ struct OnboardingView: View {
                             .font(.cardData)
                             .multilineTextAlignment(.trailing)
                             .keyboardType(.decimalPad)
-                            .submitLabel(.next)
+                            .submitLabel(.go)
                             .focused($focusedField, equals: .weight)
                         Text("kg")
                             .font(.cardUnit)
@@ -149,6 +149,14 @@ struct OnboardingView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .animation(.easeInOut(duration: 0.3), value: vm.currentStep)
+                    
+                    // Error message
+                    if !vm.errorMessage.isEmpty {
+                        Text(vm.errorMessage)
+                            .foregroundStyle(Color.Label.secondary)
+                            .font(.callout)
+                            .multilineTextAlignment(.center)
+                    }
                     
                     // Progress indicator
                     HStack(spacing: 8) {
@@ -212,7 +220,7 @@ struct OnboardingView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Suivant", systemImage: "chevron.forward") {
                             withAnimation {
-                                vm.currentStep += 1
+                                vm.nextStep(formData: onboardingData)
                             }
                         }
                     }
