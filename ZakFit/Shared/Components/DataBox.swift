@@ -18,7 +18,7 @@ struct DataBox<Content: View>: View {
         case normal, onboarding
     }
     enum DataBoxIcon {
-        case none, pencil, dropdown
+        case none, numbers, calendar, list
     }
             
     init(
@@ -37,8 +37,9 @@ struct DataBox<Content: View>: View {
     
     private func getIconName() -> String {
         switch icon {
-            case .pencil: return "pencil.circle"
-            case .dropdown: return "chevron.up.chevron.down"
+            case .numbers: return "numbers.rectangle"
+            case .calendar: return "calendar"
+            case .list: return "list.bullet"
             default: return ""
         }
     }
@@ -52,7 +53,7 @@ struct DataBox<Content: View>: View {
                 Image(systemName: getIconName())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18)
+                    .frame(width: 22)
             }
             Spacer()
             HStack(alignment: .bottom, spacing: 6) {
@@ -91,7 +92,7 @@ struct DataBox<Content: View>: View {
             .background {
                 Color.App.background
             }
-        DataBox(label: "Poids", theme: .normal, icon: .pencil) {
+        DataBox(label: "Poids", theme: .normal, icon: .numbers) {
             Text("66")
                 .font(.cardData)
             Text("kg")
@@ -103,7 +104,7 @@ struct DataBox<Content: View>: View {
             .background {
                 LinearGradient.tropical
             }
-        DataBox(label: "Poids", theme: .onboarding, icon: .dropdown) {
+        DataBox(label: "Poids", theme: .onboarding, icon: .numbers) {
             Text("66")
                 .font(.cardData)
             Text("kg")

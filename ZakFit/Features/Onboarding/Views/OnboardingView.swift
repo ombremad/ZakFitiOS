@@ -38,7 +38,7 @@ struct OnboardingView: View {
             
             GlassEffectContainer {
                 VStack(spacing: 16) {
-                    DataBox(label: "Date de naissance", theme: .onboarding) {
+                    DataBox(label: "Date de naissance", theme: .onboarding, icon: .calendar) {
                         if let birthday = onboardingData.birthday {
                             Text(birthday.formatted(.dateTime.day(.twoDigits)))
                                 .font(.cardDataSmall)
@@ -57,7 +57,7 @@ struct OnboardingView: View {
                         showCalendar = true
                     }
                     
-                    DataBox(label: "Sexe", theme: .onboarding) {
+                    DataBox(label: "Sexe", theme: .onboarding, icon: .list) {
                         if let sex = onboardingData.sex {
                             Text(sex ? "H" : "F")
                                 .font(.cardData)
@@ -68,7 +68,7 @@ struct OnboardingView: View {
                         showSexPicker = true
                     }
                     
-                    DataBox(label: "Taille", theme: .onboarding) {
+                    DataBox(label: "Taille", theme: .onboarding, icon: .numbers) {
                         TextField("", value: $onboardingData.height, format: .number)
                             .font(.cardData)
                             .multilineTextAlignment(.trailing)
@@ -84,7 +84,7 @@ struct OnboardingView: View {
                         focusedField = .height
                     }
                     
-                    DataBox(label: "Poids", theme: .onboarding) {
+                    DataBox(label: "Poids", theme: .onboarding, icon: .numbers) {
                         TextField("", value: $onboardingData.weight, format: .number)
                             .font(.cardData)
                             .multilineTextAlignment(.trailing)
@@ -132,7 +132,7 @@ struct OnboardingView: View {
         OnboardingCard {
             Text("Mon programme")
                 .font(.title2)
-            Text("Calculated BMR: " + vm.bmr.description)
+            
         }
     }
 
