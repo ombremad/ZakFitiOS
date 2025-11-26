@@ -134,7 +134,19 @@ struct OnboardingView: View {
         OnboardingCard {
             Text("Mon programme")
                 .font(.title2)
-            
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                Button("Prise de masse") { vm.fitnessProgram = .gainMass }
+                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .gainMass ? .highlight : .normal, width: .full))
+                Button("Maintien") { vm.fitnessProgram = .maintain }
+                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .maintain ? .highlight : .normal, width: .full))
+                Button("Perte de poids") { vm.fitnessProgram = .loseWeight }
+                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .loseWeight ? .highlight : .normal, width: .full))
+                Button("Personnalisé") { vm.fitnessProgram = .custom }
+                    .buttonStyle(CustomButtonStyle(state: vm.fitnessProgram == .custom ? .highlight : .normal, width: .full))
+            }
+        }
+        .onChange(of: vm.fitnessProgram) {
+            vm.calculateRepartition()
         }
     }
 
@@ -146,7 +158,8 @@ struct OnboardingView: View {
                     ZStack {
                         Group {
                             switch vm.currentStep {
-                                case 0: stepWelcome
+                                case 0: stepProgram
+//                                case 0: stepWelcome
                                 case 1: stepMorphology
                                 case 2: stepRestrictions
                                 case 3: stepProgram

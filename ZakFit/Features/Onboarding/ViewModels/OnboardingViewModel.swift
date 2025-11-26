@@ -16,32 +16,47 @@ class OnboardingViewModel {
     
     var currentStep: Int = 0
     var restrictionTypesAvailable: [RestrictionType] = []
+    
     var bmr: Int = 0
+    var carbsPercentage: Int = 0
+    var fatsPercentage: Int = 0
+    var protsPercentage: Int = 0
+    var carbsDaily: Int = 0
+    var fatsDaily: Int = 0
+    var protsDaily: Int = 0
     
-    func fetchRestrictionTypes() async {
-        isLoading = true
-        
-        do {
-            let response: [RestrictionTypeResponse] = try await NetworkService.shared.get(
-                endpoint: "/restrictionTypes",
-                requiresAuth: false
-            )
-            restrictionTypesAvailable = response.map(RestrictionType.init)
-        } catch let error as NetworkError {
-            errorMessage = error.localizedDescription
-        } catch {
-            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
-        }
-        
-        isLoading = false
+    var fitnessProgram: FitnessProgram = .maintain
+    enum FitnessProgram {
+        case gainMass, maintain, loseWeight, custom
     }
-    
+     
     func nextStep(formData: OnboardingFormData) {
         if currentStep == 1 {
             guard validateMorphologyForm(formData) else { return }
             bmr = calculateBMR(birthday: formData.birthday!, sex: formData.sex!, height: formData.height!, weight: formData.weight!)
         }
         currentStep += 1
+    }
+    
+    func calculateRepartition() {
+        switch fitnessProgram {
+            case .gainMass:
+                carbsPercentage = 45
+                fatsPercentage = 15
+                protsPercentage = 40
+            case .loseWeight:
+                carbsPercentage = 30
+                fatsPercentage = 25
+                protsPercentage = 45
+            default:
+                carbsPercentage = 40
+                fatsPercentage = 30
+                protsPercentage = 30
+        }
+        
+        carbsDaily = bmr * carbsPercentage / 100
+        fatsDaily = bmr * fatsPercentage / 100
+        protsDaily = bmr * protsPercentage / 100
     }
     
     func validateMorphologyForm(_ formData: OnboardingFormData) -> Bool {
@@ -72,5 +87,23 @@ class OnboardingViewModel {
         }
 
         return true
+    }
+    
+    func fetchRestrictionTypes() async {
+        isLoading = true
+        
+        do {
+            let response: [RestrictionTypeResponse] = try await NetworkService.shared.get(
+                endpoint: "/restrictionTypes",
+                requiresAuth: false
+            )
+            restrictionTypesAvailable = response.map(RestrictionType.init)
+        } catch let error as NetworkError {
+            errorMessage = error.localizedDescription
+        } catch {
+            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
+        }
+        
+        isLoading = false
     }
 }
