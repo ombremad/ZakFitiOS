@@ -40,14 +40,10 @@ struct UserSettingsView: View {
             
             Spacer()
             
-            VStack(alignment: .leading, spacing: 16) {
-                Image(systemName: "pencil.circle")
-                    .foregroundStyle(Color.Label.secondary)
-                Button("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.forward") {
-                    showLogoutAlert.toggle()
-                }
-                    .foregroundStyle(Color.Label.destructive)
+            Button("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.forward") {
+                showLogoutAlert.toggle()
             }
+            .foregroundStyle(Color.Label.destructive)
             .labelStyle(.iconOnly)
             .font(.system(size: 22))
             .fontWeight(.semibold)
