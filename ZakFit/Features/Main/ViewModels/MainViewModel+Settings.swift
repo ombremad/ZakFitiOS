@@ -28,27 +28,16 @@ extension MainViewModel {
     
     func postPatch(_ patch: User) async {
         do {
-            let userResponse: User = try await NetworkService.shared.patch(
+            let request = patch.toRequest()
+            
+            let userResponse: UserResponse = try await NetworkService.shared.patch(
                 endpoint: "/users",
-                body: patch,
+                body: request,
                 requiresAuth: true
             )
             
-            // Update local user with fetched data
-            user.id = userResponse.id
-            user.firstName = userResponse.firstName
-            user.lastName = userResponse.lastName
-            user.email = userResponse.email
-            user.birthday = userResponse.birthday
-            user.height = userResponse.height
-            user.weight = userResponse.weight
-            user.sex = userResponse.sex
-            user.bmr = userResponse.bmr
-            user.physicalActivity = userResponse.physicalActivity
-            user.goalCals = userResponse.goalCals
-            user.goalCarbs = userResponse.goalCarbs
-            user.goalFats = userResponse.goalFats
-            user.goalProts = userResponse.goalProts
+            user = User(from: userResponse)
+            
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
         } catch {

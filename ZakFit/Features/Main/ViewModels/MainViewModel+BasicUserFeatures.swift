@@ -12,25 +12,12 @@ extension MainViewModel {
         isLoading = true
         do {
             if user.id == nil {
-                let userResponse: User = try await NetworkService.shared.get(
+                let userResponse: UserResponse = try await NetworkService.shared.get(
                     endpoint: "/users",
                     requiresAuth: true
                 )
-                // Update local user with fetched data
-                user.id = userResponse.id
-                user.firstName = userResponse.firstName
-                user.lastName = userResponse.lastName
-                user.email = userResponse.email
-                user.birthday = userResponse.birthday
-                user.height = userResponse.height
-                user.weight = userResponse.weight
-                user.sex = userResponse.sex
-                user.bmr = userResponse.bmr
-                user.physicalActivity = userResponse.physicalActivity
-                user.goalCals = userResponse.goalCals
-                user.goalCarbs = userResponse.goalCarbs
-                user.goalFats = userResponse.goalFats
-                user.goalProts = userResponse.goalProts
+                // Convert API response to domain model
+                user = User(from: userResponse)
             }
         } catch {
             print("Error: \(error)")

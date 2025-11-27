@@ -42,6 +42,7 @@ class NetworkService {
         // Encode body if provided
         if let body = body {
             let encoder = JSONEncoder()
+            encoder.keyEncodingStrategy = .convertToSnakeCase
             encoder.dateEncodingStrategy = .iso8601
             request.httpBody = try encoder.encode(body)
         }
@@ -52,17 +53,19 @@ class NetworkService {
             throw NetworkError.invalidResponse
         }
         
+        // Handle status codes
         switch httpResponse.statusCode {
         case 200...299:
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
-                    let decodedData = try decoder.decode(T.self, from: data)
-                    return decodedData
-                } catch {
-                    print("Decoding error: \(error)")
-                    throw NetworkError.decodingError
-                }
+            // Success - decode the response
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase  // Add this!
+            decoder.dateDecodingStrategy = .iso8601
+            
+            do {
+                return try decoder.decode(T.self, from: data)
+            } catch {
+                throw NetworkError.decodingError
+            }
         case 401:
             throw NetworkError.unauthorized
         default:

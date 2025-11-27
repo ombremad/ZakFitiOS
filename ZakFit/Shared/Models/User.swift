@@ -7,8 +7,9 @@
 
 import Foundation
 
+// MARK: - Domain Model
 @Observable
-final class User: Codable {
+final class User {
     var id: UUID?
     var firstName: String?
     var lastName: String?
@@ -23,23 +24,6 @@ final class User: Codable {
     var goalCarbs: Int?
     var goalFats: Int?
     var goalProts: Int?
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case email
-        case height
-        case weight
-        case birthday
-        case sex
-        case physicalActivity = "physical_activity"
-        case bmr
-        case goalCals = "goal_cals"
-        case goalProts = "goal_prots"
-        case goalCarbs = "goal_carbs"
-        case goalFats = "goal_fats"
-    }
     
     init(
         id: UUID? = nil,
@@ -73,39 +57,42 @@ final class User: Codable {
         self.goalProts = goalProts
     }
     
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decodeIfPresent(UUID.self, forKey: .id)
-        firstName = try container.decodeIfPresent(String.self, forKey: .firstName)
-        lastName = try container.decodeIfPresent(String.self, forKey: .lastName)
-        email = try container.decodeIfPresent(String.self, forKey: .email)
-        birthday = try container.decodeIfPresent(Date.self, forKey: .birthday)
-        height = try container.decodeIfPresent(Int.self, forKey: .height)
-        weight = try container.decodeIfPresent(Int.self, forKey: .weight)
-        sex = try container.decodeIfPresent(Bool.self, forKey: .sex)
-        bmr = try container.decodeIfPresent(Int.self, forKey: .bmr)
-        physicalActivity = try container.decodeIfPresent(Int.self, forKey: .physicalActivity)
-        goalCals = try container.decodeIfPresent(Int.self, forKey: .goalCals)
-        goalCarbs = try container.decodeIfPresent(Int.self, forKey: .goalCarbs)
-        goalFats = try container.decodeIfPresent(Int.self, forKey: .goalFats)
-        goalProts = try container.decodeIfPresent(Int.self, forKey: .goalProts)
+    // Convenience initializer from API response
+    convenience init(from response: UserResponse) {
+        self.init(
+            id: response.id,
+            firstName: response.firstName,
+            lastName: response.lastName,
+            email: response.email,
+            birthday: response.birthday,
+            height: response.height,
+            weight: response.weight,
+            sex: response.sex,
+            bmr: response.bmr,
+            physicalActivity: response.physicalActivity,
+            goalCals: response.goalCals,
+            goalCarbs: response.goalCarbs,
+            goalFats: response.goalFats,
+            goalProts: response.goalProts
+        )
     }
     
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(id, forKey: .id)
-        try container.encodeIfPresent(firstName, forKey: .firstName)
-        try container.encodeIfPresent(lastName, forKey: .lastName)
-        try container.encodeIfPresent(email, forKey: .email)
-        try container.encodeIfPresent(birthday, forKey: .birthday)
-        try container.encodeIfPresent(height, forKey: .height)
-        try container.encodeIfPresent(weight, forKey: .weight)
-        try container.encodeIfPresent(sex, forKey: .sex)
-        try container.encodeIfPresent(bmr, forKey: .bmr)
-        try container.encodeIfPresent(physicalActivity, forKey: .physicalActivity)
-        try container.encodeIfPresent(goalCals, forKey: .goalCals)
-        try container.encodeIfPresent(goalCarbs, forKey: .goalCarbs)
-        try container.encodeIfPresent(goalFats, forKey: .goalFats)
-        try container.encodeIfPresent(goalProts, forKey: .goalProts)
+    // Convert to API request
+    func toRequest() -> UserRequest {
+        UserRequest(
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            birthday: birthday,
+            height: height,
+            weight: weight,
+            sex: sex,
+            bmr: bmr,
+            physicalActivity: physicalActivity,
+            goalCals: goalCals,
+            goalCarbs: goalCarbs,
+            goalFats: goalFats,
+            goalProts: goalProts
+        )
     }
 }

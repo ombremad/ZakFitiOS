@@ -1,5 +1,5 @@
 //
-//  UserUpdateRequest.swift
+//  User+PatchHelpers.swift
 //  ZakFit
 //
 //  Created by Anne Ferret on 27/11/2025.
