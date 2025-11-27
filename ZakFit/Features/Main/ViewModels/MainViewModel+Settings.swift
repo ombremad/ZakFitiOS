@@ -33,7 +33,6 @@ extension MainViewModel {
                 body: patch,
                 requiresAuth: true
             )
-            print("API update successful for user \(user.email ?? "undefined")")
             
             // Update local user with fetched data
             user.id = userResponse.id
@@ -50,8 +49,6 @@ extension MainViewModel {
             user.goalCarbs = userResponse.goalCarbs
             user.goalFats = userResponse.goalFats
             user.goalProts = userResponse.goalProts
-            print("Local update successful for user \(user.email ?? "undefined")")
-            
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
         } catch {
