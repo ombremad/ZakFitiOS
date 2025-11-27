@@ -56,7 +56,7 @@ struct UserSettingsView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .glassEffect(.regular.tint(Color.Card.darkBackground))
+        .glassEffect(.regular.tint(Color.Card.darkBackground), in: .rect(cornerRadius: 25))
     }
     private var morphology: some View {
         VStack(alignment: .leading, spacing: 24) {
