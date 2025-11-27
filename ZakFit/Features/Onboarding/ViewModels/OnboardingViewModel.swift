@@ -21,23 +21,21 @@ class OnboardingViewModel {
     var carbsPercentage: Int = 0
     var fatsPercentage: Int = 0
     var protsPercentage: Int = 0
+    var calsDaily: Int = 0
     var carbsDaily: Int = 0
     var fatsDaily: Int = 0
     var protsDaily: Int = 0
     var nutritionValues: Int {
-        bmr + carbsPercentage + fatsPercentage + protsPercentage
+        bmr + calsDaily + carbsPercentage + fatsPercentage + protsPercentage
     }
     
     var fitnessProgram: FitnessProgram = .maintain
-    enum FitnessProgram {
-        case gainMass, maintain, loseWeight, custom
-    }
      
     func nextStep(formData: OnboardingFormData) {
         if currentStep == 1 {
             guard validateMorphologyForm(formData) else { return }
             bmr = calculateBMR(birthday: formData.birthday!, sex: formData.sex!, height: formData.height!, weight: formData.weight!)
-            calculateRepartition()
+            getRepartition(formData)
         }
         if currentStep == 3 {
             guard validateProgramForm() else { return }
@@ -59,7 +57,8 @@ class OnboardingViewModel {
                 weight: formData.weight!,
                 sex: formData.sex!,
                 bmr: bmr,
-                goalCals: bmr,
+                physicalActivity: formData.physicalActivity!,
+                goalCals: calsDaily,
                 goalCarbs: carbsDaily,
                 goalFats: fatsDaily,
                 goalProts: protsDaily,
@@ -85,29 +84,19 @@ class OnboardingViewModel {
         isLoading = false
     }
     
-    func calculateRepartition() {
-        bmr = 2500  // DEBUG
-        switch fitnessProgram {
-            case .gainMass:
-                carbsPercentage = 45
-                fatsPercentage = 15
-                protsPercentage = 40
-            case .loseWeight:
-                carbsPercentage = 30
-                fatsPercentage = 25
-                protsPercentage = 45
-            default:
-                carbsPercentage = 40
-                fatsPercentage = 30
-                protsPercentage = 30
-        }
+    func getRepartition(_ formData: OnboardingFormData) {
+        let repartition = getNutrientPercentages(fitnessProgram: fitnessProgram)
+        carbsPercentage = repartition.carbsPercentage
+        fatsPercentage = repartition.fatsPercentage
+        protsPercentage = repartition.protsPercentage
+        calsDaily = calculateDailyCals(bmr: bmr, physicalActivity: formData.physicalActivity ?? 0)
         calculateDailyValues()
     }
     
     func calculateDailyValues() {
-        carbsDaily = bmr * carbsPercentage / 100
-        fatsDaily = bmr * fatsPercentage / 100
-        protsDaily = bmr * protsPercentage / 100
+        carbsDaily = calsDaily * carbsPercentage / 100
+        fatsDaily = calsDaily * fatsPercentage / 100
+        protsDaily = calsDaily * protsPercentage / 100
     }
     
     // Field validation
@@ -117,6 +106,12 @@ class OnboardingViewModel {
         let birthdayResult = validation.validateBirthday(formData.birthday)
         if !birthdayResult.isValid {
             errorMessage = birthdayResult.errorMessage ?? ""
+            return false
+        }
+        
+        let physicalActivityResult = validation.validatePhysicalActivity(formData.physicalActivity)
+        if !physicalActivityResult.isValid {
+            errorMessage = physicalActivityResult.errorMessage ?? ""
             return false
         }
         
@@ -137,14 +132,14 @@ class OnboardingViewModel {
             errorMessage = weightResult.errorMessage ?? ""
             return false
         }
-
+        
         return true
     }
     
     func validateProgramForm() -> Bool {
         errorMessage = ""
         
-        let bmrResult = validation.validateBmr(bmr)
+        let bmrResult = validation.validateCalories(bmr)
         if !bmrResult.isValid {
             errorMessage = bmrResult.errorMessage ?? ""
             return false

@@ -24,3 +24,41 @@ func calculateBMR(birthday: Date, sex: Bool, height: Int, weight: Int) -> Int {
     }
     return 0
 }
+
+func calculateDailyCals(bmr: Int, physicalActivity: Int) -> Int {
+    var multiplier: Int
+    switch physicalActivity {
+        case 0: multiplier = 20
+        case 1: multiplier = 30
+        case 2: multiplier = 45
+        case 3: multiplier = 55
+        case 4: multiplier = 70
+        case 5: multiplier = 90
+        default: multiplier = 0
+    }
+    return bmr + (bmr * multiplier / 100)
+}
+
+func getNutrientPercentages(fitnessProgram: FitnessProgram) -> (carbsPercentage: Int, fatsPercentage: Int, protsPercentage: Int) {
+    switch fitnessProgram {
+        case .gainMass:
+            return (
+                carbsPercentage: 45,
+                fatsPercentage: 15,
+                protsPercentage: 40
+            )
+        case .loseWeight:
+            return (
+                carbsPercentage: 30,
+                fatsPercentage: 25,
+                protsPercentage: 45
+                )
+        default:
+            return (
+                carbsPercentage: 40,
+                fatsPercentage: 30,
+                protsPercentage: 30
+                )
+    }
+
+}

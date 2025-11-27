@@ -94,11 +94,21 @@ final class FieldValidation {
         return .failure("Le poids est obligatoire.")
     }
     
-    func validateBmr(_ bmr: Int) -> ValidationResult {
-        if bmr < 50 || bmr > 9000 {
+    func validateCalories(_ dailyCals: Int) -> ValidationResult {
+        if dailyCals < 50 || dailyCals > 9000 {
             return .failure("Le nombre de calories par jour doit être réaliste.")
         }
         return .success
+    }
+    
+    func validatePhysicalActivity(_ physicalActivity: Int?) -> ValidationResult {
+        if let physicalActivity = physicalActivity {
+            if physicalActivity < 0 || physicalActivity > 5 {
+                return .failure("Erreur : le niveau d'activité est incorrect.")
+            }
+            return .success
+        }
+        return .failure("Veuillez choisir un niveau d'activité.")
     }
     
     func validatePercentage(_ percentage: Int) -> ValidationResult {

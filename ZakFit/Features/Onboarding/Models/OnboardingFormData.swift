@@ -12,5 +12,6 @@ struct OnboardingFormData: Equatable {
     var sex: Bool?
     var weight: Int?
     var height: Int?
+    var physicalActivity: Int?
     var restrictionTypes: [RestrictionType] = []
 }

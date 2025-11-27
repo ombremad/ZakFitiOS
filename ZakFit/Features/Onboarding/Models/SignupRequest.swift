@@ -17,6 +17,7 @@ struct SignupRequest: Codable {
     let weight: Int
     let sex: Bool
     let bmr: Int
+    let physicalActivity: Int
     let goalCals: Int
     let goalCarbs: Int
     let goalFats: Int

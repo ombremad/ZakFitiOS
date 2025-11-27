@@ -60,47 +60,68 @@ struct OnboardingView: View {
                     }
                     
                     Menu {
-                        Picker("Sexe", selection: $onboardingData.sex) {
-                            Text("Homme").tag(true)
-                            Text("Femme").tag(false)
+                        Picker("Niveau d'activité physique", selection: $onboardingData.physicalActivity) {
+                            Text("5 : Très intense").tag(5)
+                            Text("4 : Intense").tag(4)
+                            Text("3 : Quotidien").tag(3)
+                            Text("2 : Moyen").tag(2)
+                            Text("1 : Faible").tag(1)
+                            Text("0 : Sédentaire").tag(0)
                         }
                     } label: {
-                        DataBox(label: "Sexe", theme: .onboarding, icon: .list) {
-                            if let sex = onboardingData.sex {
-                                Text(sex ? "H" : "F")
+                        DataBox(label: "Niveau d'activité physique", theme: .onboarding, icon: .list) {
+                            if let physicalActivity = onboardingData.physicalActivity {
+                                Text("\(physicalActivity)")
                                     .font(.cardData)
                             }
                         }
                     }
                     
-                    DataBox(label: "Taille", theme: .onboarding, icon: .numbers) {
-                        TextField("", value: $onboardingData.height, format: .number)
-                            .font(.cardData)
-                            .multilineTextAlignment(.trailing)
-                            .keyboardType(.decimalPad)
-                            .submitLabel(.next)
-                            .focused($focusedField, equals: .height)
-                        Text("cm")
-                            .font(.cardUnit)
-                            .offset(y: -5)
-                    }
-                    .onTapGesture {
-                        focusedField = .height
-                    }
-                    
-                    DataBox(label: "Poids", theme: .onboarding, icon: .numbers) {
-                        TextField("", value: $onboardingData.weight, format: .number)
-                            .font(.cardData)
-                            .multilineTextAlignment(.trailing)
-                            .keyboardType(.decimalPad)
-                            .submitLabel(.go)
-                            .focused($focusedField, equals: .weight)
-                        Text("kg")
-                            .font(.cardUnit)
-                            .offset(y: -5)
-                    }
-                    .onTapGesture {
-                        focusedField = .weight
+                    HStack {
+                        Menu {
+                            Picker("Sexe", selection: $onboardingData.sex) {
+                                Text("Homme").tag(true)
+                                Text("Femme").tag(false)
+                            }
+                        } label: {
+                            DataBox(label: "Sexe", theme: .onboarding, icon: .list) {
+                                if let sex = onboardingData.sex {
+                                    Text(sex ? "H" : "F")
+                                        .font(.cardData)
+                                }
+                            }
+                        }
+                        
+                        
+                        DataBox(label: "Taille", theme: .onboarding, icon: .numbers) {
+                            TextField("", value: $onboardingData.height, format: .number)
+                                .font(.cardData)
+                                .multilineTextAlignment(.trailing)
+                                .keyboardType(.decimalPad)
+                                .submitLabel(.next)
+                                .focused($focusedField, equals: .height)
+                            Text("cm")
+                                .font(.cardUnit)
+                                .offset(y: -5)
+                        }
+                        .onTapGesture {
+                            focusedField = .height
+                        }
+                        
+                        DataBox(label: "Poids", theme: .onboarding, icon: .numbers) {
+                            TextField("", value: $onboardingData.weight, format: .number)
+                                .font(.cardData)
+                                .multilineTextAlignment(.trailing)
+                                .keyboardType(.decimalPad)
+                                .submitLabel(.go)
+                                .focused($focusedField, equals: .weight)
+                            Text("kg")
+                                .font(.cardUnit)
+                                .offset(y: -5)
+                        }
+                        .onTapGesture {
+                            focusedField = .weight
+                        }
                     }
                 }
             }
@@ -155,9 +176,9 @@ struct OnboardingView: View {
                 DataBox(label: "Apport calorique par jour", theme: .onboarding, icon: vm.fitnessProgram == .custom ? .numbers : .none) {
                     Group {
                         if vm.fitnessProgram == .custom {
-                            TextField("", value: $vm.bmr, format: .number)
+                            TextField("", value: $vm.calsDaily, format: .number)
                         } else {
-                            Text(vm.bmr.description)
+                            Text(vm.calsDaily.description)
                         }
                     }
                     .font(.cardData)
@@ -254,7 +275,7 @@ struct OnboardingView: View {
                 }
             }
             .onChange(of: vm.fitnessProgram) {
-                vm.calculateRepartition()
+                vm.getRepartition(onboardingData)
             }
             .onChange(of: vm.nutritionValues) {
                 vm.calculateDailyValues()
