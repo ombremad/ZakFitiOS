@@ -12,27 +12,36 @@ final class FieldValidation {
     
     private init() {}
     
-    func validateFirstName(_ firstName: String) -> ValidationResult {
-        if firstName.isEmpty {
-            return .failure("Le prénom ne peut pas être vide.")
+    func validateFirstName(_ firstName: String?) -> ValidationResult {
+        if let firstName = firstName {
+            if firstName.isEmpty {
+                return .failure("Le prénom ne peut pas être vide.")
+            }
+            return .success
         }
-        return .success
+        return .failure("Le prénom est obligatoire.")
     }
     
-    func validateLastName(_ lastName: String) -> ValidationResult {
-        if lastName.isEmpty {
-            return .failure("Le nom de famille ne peut pas être vide.")
+    func validateLastName(_ lastName: String?) -> ValidationResult {
+        if let lastName = lastName {
+            if lastName.isEmpty {
+                return .failure("Le nom de famille ne peut pas être vide.")
+            }
+            return .success
         }
-        return .success
+        return .failure("Le nom de famille est obligatoire.")
     }
     
-    func validateEmail(_ email: String) -> ValidationResult {
-        if email.isEmpty {
-            return .failure("L'adresse e-mail ne peut pas être vide.")
-        } else if !email.contains("@") || !email.contains(".") {
-            return .failure("Le format de l'adresse email n'est pas valide.")
+    func validateEmail(_ email: String?) -> ValidationResult {
+        if let email = email {
+            if email.isEmpty {
+                return .failure("L'adresse e-mail ne peut pas être vide.")
+            } else if !email.contains("@") || !email.contains(".") {
+                return .failure("Le format de l'adresse email n'est pas valide.")
+            }
+            return .success
         }
-        return .success
+        return .failure("L'adresse e-mail est obligatoire.")
     }
     
     func validatePassword(_ password: String) -> ValidationResult {

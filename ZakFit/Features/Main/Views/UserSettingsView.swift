@@ -15,6 +15,7 @@ struct UserSettingsView: View {
     
     // UX states
     @State private var showCalendar = false
+    @State private var showLogoutAlert = false
     @FocusState private var focusedField: Field?
     enum Field { case height, weight, cals }
     
@@ -25,7 +26,7 @@ struct UserSettingsView: View {
                 .foregroundStyle(Color.Label.tertiary)
             
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
+                HStack(spacing: 6) {
                     Text(vm.user.firstName ?? "undefined")
                     Text(vm.user.lastName ?? "undefined")
                 }
@@ -39,13 +40,16 @@ struct UserSettingsView: View {
             
             Spacer()
             
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 Image(systemName: "pencil.circle")
                     .foregroundStyle(Color.Label.secondary)
-                Image(systemName: "rectangle.portrait.and.arrow.forward")
+                Button("Se déconnecter", systemImage: "rectangle.portrait.and.arrow.forward") {
+                    showLogoutAlert.toggle()
+                }
                     .foregroundStyle(Color.Label.destructive)
             }
-            .font(.system(size: 20))
+            .labelStyle(.iconOnly)
+            .font(.system(size: 22))
             .fontWeight(.semibold)
             .padding(.vertical, 16)
 
@@ -79,25 +83,25 @@ struct UserSettingsView: View {
                         showCalendar = true
                     }
                     
-                    Menu {
-                        Picker("Niveau d'activité physique", selection: $editUser.physicalActivity) {
-                            Text("5 : Très intense").tag(5)
-                            Text("4 : Intense").tag(4)
-                            Text("3 : Quotidien").tag(3)
-                            Text("2 : Moyen").tag(2)
-                            Text("1 : Faible").tag(1)
-                            Text("0 : Sédentaire").tag(0)
-                        }
-                    } label: {
-                        DataBox(label: "Niveau d'activité physique", icon: .list) {
-                            if let physicalActivity = editUser.physicalActivity {
-                                Text("\(physicalActivity)")
-                                    .font(.cardData)
+                    HStack {
+                        Menu {
+                            Picker("Activité physique", selection: $editUser.physicalActivity) {
+                                Text("0 : Sédentaire").tag(0)
+                                Text("1 : Faible").tag(1)
+                                Text("2 : Moyen").tag(2)
+                                Text("3 : Quotidien").tag(3)
+                                Text("4 : Intense").tag(4)
+                                Text("5 : Très intense").tag(5)
+                            }
+                        } label: {
+                            DataBox(label: "Activité physique", icon: .list) {
+                                if let physicalActivity = editUser.physicalActivity {
+                                    Text("\(physicalActivity)")
+                                        .font(.cardData)
+                                }
                             }
                         }
-                    }
-                    
-                    HStack {
+                        
                         Menu {
                             Picker("Sexe", selection: $editUser.sex) {
                                 Text("Homme").tag(true)
@@ -111,8 +115,9 @@ struct UserSettingsView: View {
                                 }
                             }
                         }
+                    }
                         
-                        
+                        HStack {
                         DataBox(label: "Taille", icon: .numbers) {
                             TextField("", value: $editUser.height, format: .number)
                                 .font(.cardData)
@@ -148,6 +153,43 @@ struct UserSettingsView: View {
 
         }
     }
+    private var accountInfo: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Mes infos de compte")
+                .font(.title2)
+            
+            VStack(spacing: 12) {
+                ProfileField("Prénom") {
+                    TextField("Prénom", text: Binding(
+                        get: { editUser.firstName ?? "" },
+                        set: { editUser.firstName = $0 }
+                    ))
+                    .textContentType(.givenName)
+                    .submitLabel(.go)
+                }
+                
+                ProfileField("Nom") {
+                    TextField("Nom", text: Binding(
+                        get: { editUser.lastName ?? "" },
+                        set: { editUser.lastName = $0 }
+                    ))
+                    .textContentType(.familyName)
+                    .submitLabel(.go)
+                }
+                
+                ProfileField("E-mail") {
+                    TextField("E-mail", text: Binding(
+                        get: { editUser.email ?? "" },
+                        set: { editUser.email = $0 }
+                    ))
+                    .textContentType(.emailAddress)
+                    .submitLabel(.go)
+                }
+            }
+            .textFieldStyle(CustomTextFieldStyle())
+
+        }
+    }
     
     private var calendar: some View {
         VStack {
@@ -178,17 +220,29 @@ struct UserSettingsView: View {
                     
                     card
                     morphology
+                    accountInfo
+                    
+                    Text(vm.errorMessage)
+                        .font(.caption)
 
                 }
                 .padding()
             }
             
-            .sheet(isPresented: $showCalendar) { calendar }
-            
             .task {
                 editUser = vm.user.copy()
             }
             
+            .sheet(isPresented: $showCalendar) { calendar }
+            
+            .alert("Déconnexion", isPresented: $showLogoutAlert) {
+                Button("Se déconnecter", role: .destructive) {
+                    vm.logout()
+                }
+                Button("Annuler", role: .cancel) {}
+            } message: {
+                Text("Voulez-vous vraiment vous déconnecter de votre compte ?")
+            }
 
             .toolbar {
                 ToolbarItem(placement: .title) {

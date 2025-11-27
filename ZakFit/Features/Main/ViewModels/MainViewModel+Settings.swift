@@ -89,6 +89,24 @@ extension MainViewModel {
             return false
         }
         
+        let firstNameResult = validation.validateFirstName(formData.firstName)
+        if !firstNameResult.isValid {
+            errorMessage = firstNameResult.errorMessage ?? ""
+            return false
+        }
+        
+        let lastNameResult = validation.validateLastName(formData.lastName)
+        if !lastNameResult.isValid {
+            errorMessage = lastNameResult.errorMessage ?? ""
+            return false
+        }
+        
+        let emailResult = validation.validateEmail(formData.email)
+        if !emailResult.isValid {
+            errorMessage = emailResult.errorMessage ?? ""
+            return false
+        }
+                
         return true
     }
 }

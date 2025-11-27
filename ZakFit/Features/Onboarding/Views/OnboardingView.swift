@@ -59,25 +59,25 @@ struct OnboardingView: View {
                         showCalendar = true
                     }
                     
-                    Menu {
-                        Picker("Niveau d'activité physique", selection: $onboardingData.physicalActivity) {
-                            Text("5 : Très intense").tag(5)
-                            Text("4 : Intense").tag(4)
-                            Text("3 : Quotidien").tag(3)
-                            Text("2 : Moyen").tag(2)
-                            Text("1 : Faible").tag(1)
-                            Text("0 : Sédentaire").tag(0)
-                        }
-                    } label: {
-                        DataBox(label: "Niveau d'activité physique", theme: .onboarding, icon: .list) {
-                            if let physicalActivity = onboardingData.physicalActivity {
-                                Text("\(physicalActivity)")
-                                    .font(.cardData)
+                    HStack {
+                        Menu {
+                            Picker("Activité physique", selection: $onboardingData.physicalActivity) {
+                                Text("5 : Très intense").tag(5)
+                                Text("4 : Intense").tag(4)
+                                Text("3 : Quotidien").tag(3)
+                                Text("2 : Moyen").tag(2)
+                                Text("1 : Faible").tag(1)
+                                Text("0 : Sédentaire").tag(0)
+                            }
+                        } label: {
+                            DataBox(label: "Activité physique", theme: .onboarding, icon: .list) {
+                                if let physicalActivity = onboardingData.physicalActivity {
+                                    Text("\(physicalActivity)")
+                                        .font(.cardData)
+                                }
                             }
                         }
-                    }
-                    
-                    HStack {
+                        
                         Menu {
                             Picker("Sexe", selection: $onboardingData.sex) {
                                 Text("Homme").tag(true)
@@ -91,8 +91,9 @@ struct OnboardingView: View {
                                 }
                             }
                         }
+                    }
                         
-                        
+                    HStack {
                         DataBox(label: "Taille", theme: .onboarding, icon: .numbers) {
                             TextField("", value: $onboardingData.height, format: .number)
                                 .font(.cardData)
