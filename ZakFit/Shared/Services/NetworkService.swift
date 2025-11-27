@@ -54,13 +54,15 @@ class NetworkService {
         
         switch httpResponse.statusCode {
         case 200...299:
-            do {
-                let decodedData = try JSONDecoder().decode(T.self, from: data)
-                return decodedData
-            } catch {
-                print("Decoding error: \(error)")
-                throw NetworkError.decodingError
-            }
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    let decodedData = try decoder.decode(T.self, from: data)
+                    return decodedData
+                } catch {
+                    print("Decoding error: \(error)")
+                    throw NetworkError.decodingError
+                }
         case 401:
             throw NetworkError.unauthorized
         default:

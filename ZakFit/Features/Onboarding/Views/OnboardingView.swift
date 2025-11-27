@@ -14,7 +14,7 @@ struct OnboardingView: View {
     var userData: LoginFormData
     @State private var onboardingData = OnboardingFormData()
     
-    // UX values
+    // UX states
     @State private var showCalendar = false
     @FocusState private var focusedField: Field?
     enum Field { case height, weight, cals }
@@ -302,6 +302,28 @@ struct OnboardingView: View {
             }
         }
     }
+    
+    private var calendar: some View {
+        VStack {
+            DatePicker("", selection: Binding(
+                get: {
+                    onboardingData.birthday ?? Calendar.current.date(
+                        from: DateComponents(year: 2000, month: 1, day: 1)
+                    )!
+                },
+                set: { onboardingData.birthday = $0 }
+            ), displayedComponents: .date)
+            .datePickerStyle(.wheel)
+            .labelsHidden()
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            Button("Valider") {
+                showCalendar = false
+            }
+            .buttonStyle(CustomButtonStyle(state: .validate))
+        }
+        .presentationDetents([.fraction(0.35)])
+    }
 
     var body: some View {
         NavigationStack {
@@ -353,27 +375,7 @@ struct OnboardingView: View {
                 await vm.fetchRestrictionTypes()
             }
             
-            .sheet(isPresented: $showCalendar) {
-                VStack {
-                    DatePicker("", selection: Binding(
-                        get: {
-                            onboardingData.birthday ?? Calendar.current.date(
-                                from: DateComponents(year: 2000, month: 1, day: 1)
-                            )!
-                        },
-                        set: { onboardingData.birthday = $0 }
-                    ), displayedComponents: .date)
-                    .datePickerStyle(.wheel)
-                    .labelsHidden()
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    Button("Valider") {
-                        showCalendar = false
-                    }
-                    .buttonStyle(CustomButtonStyle(state: .validate))
-                }
-                .presentationDetents([.fraction(0.35)])
-            }
+            .sheet(isPresented: $showCalendar) { calendar }
             
             .toolbar {
                 if vm.currentStep > 0 {

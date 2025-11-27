@@ -13,7 +13,7 @@ struct ZakFitApp: App {
         WindowGroup {
             Group {
                 if AuthManager.shared.isAuthenticated {
-                    DashboardView()
+                    TabContainer()
                 } else {
                     LoginView()
                 }

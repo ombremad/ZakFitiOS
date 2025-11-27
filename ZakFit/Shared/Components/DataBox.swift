@@ -64,9 +64,8 @@ struct DataBox<Content: View>: View {
         .foregroundStyle(theme == .onboarding ? Color.Label.vibrant : Color.Label.secondary)
         .frame(height: 60)
         .padding(16)
-        .glassEffect(theme == .onboarding ? .clear.interactive() : .regular.interactive(), in: .rect(cornerRadius: 25))
+        .glassEffect(theme == .onboarding ? .clear.interactive() : .regular.tint(Color.Card.darkBackground).interactive(), in: .rect(cornerRadius: 25))
         .contentShape(RoundedRectangle(cornerRadius: 25))
-        .shadow(radius: 4)
     }
 }
 

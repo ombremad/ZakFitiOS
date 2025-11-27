@@ -62,15 +62,6 @@ class LoginViewModel {
         showOnboarding = true
     }
     
-    func logout() {
-        do {
-            try AuthManager.shared.logout()
-            print("User logged out successfully")
-        } catch {
-            print("Error logging out: \(error.localizedDescription)")
-        }
-    }
-    
     // Field validation
     
     func validateForm(_ formData: LoginFormData) -> Bool {
