@@ -61,6 +61,7 @@ extension MainViewModel {
     }
     
     func postNewExercise(exerciseType: ExerciseType?, length: Int?, cals: Int?) async -> Bool {
+        errorMessage = ""
         isLoading = true
         do {
             let request = ExerciseRequest(

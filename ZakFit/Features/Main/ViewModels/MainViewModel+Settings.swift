@@ -18,6 +18,7 @@ extension MainViewModel {
         }
         
         if newUser.hasChanges(from: user) {
+            newUser.bmr = calculateBMR(birthday: newUser.birthday!, sex: newUser.sex!, height: newUser.height!, weight: newUser.weight!)
             let patch = newUser.changes(from: user)
             await postPatch(patch)
             await fetchUserData()

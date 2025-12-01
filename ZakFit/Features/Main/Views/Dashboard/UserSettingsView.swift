@@ -226,6 +226,7 @@ struct UserSettingsView: View {
             }
             
             .task {
+                vm.errorMessage = ""
                 editUser = vm.user.copy()
             }
             

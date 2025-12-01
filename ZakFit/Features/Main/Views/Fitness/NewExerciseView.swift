@@ -93,6 +93,9 @@ struct NewExerciseView: View {
             .onChange(of: selectedExerciseType) {
                 calculateBurnedCals()
             }
+            .task {
+                vm.errorMessage = ""
+            }
             
             .toolbar {
                 ToolbarItem(placement: .title) {
