@@ -8,14 +8,31 @@
 import Foundation
 
 extension MainViewModel {
-    func fetchExercises(days: Int?) async {
+    func fetchExercises(exerciseType: UUID? = nil, minLength: Int? = nil, maxLength: Int? = nil, days: Int? = nil) async {
         isLoading = true
         do {
-            let endpoint = if let days = days {
-                "/exercises?days=\(days)"
-            } else {
-                "/exercises"
+            var queryParams: [String] = []
+            
+            if let days = days {
+                queryParams.append("days=\(days)")
             }
+            if let exerciseType = exerciseType {
+                queryParams.append("exerciseType=\(exerciseType.uuidString)")
+            }
+            if let minLength = minLength {
+                queryParams.append("minLength=\(minLength)")
+            }
+            if let maxLength = maxLength {
+                queryParams.append("maxLength=\(maxLength)")
+            }
+            
+            let endpoint = if queryParams.isEmpty {
+                "/exercises"
+            } else {
+                "/exercises?\(queryParams.joined(separator: "&"))"
+            }
+            
+            print("Endpoint is \(endpoint)")
             
             let response: [ExerciseResponse] = try await NetworkService.shared.get(
                 endpoint: endpoint,

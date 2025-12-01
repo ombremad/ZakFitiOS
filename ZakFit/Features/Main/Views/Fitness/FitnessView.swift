@@ -25,22 +25,29 @@ struct FitnessView: View {
                                 .font(.callout2)
                                 .foregroundStyle(Color.Label.tertiary)
                         }
-                        ForEach(vm.exercises) { exercise in
-                            ExerciseRow(
-                                name: exercise.exerciseType.name,
-                                icon: exercise.exerciseType.icon,
-                                date: exercise.date,
-                                length: exercise.length,
-                                calories: exercise.cals
-                            )
+                        GlassEffectContainer {
+                            ForEach(vm.exercises) { exercise in
+                                ExerciseRow(
+                                    name: exercise.exerciseType.name,
+                                    icon: exercise.exerciseType.icon,
+                                    level: exercise.exerciseType.level,
+                                    date: exercise.date,
+                                    length: exercise.length,
+                                    calories: exercise.cals
+                                )
+                            }
                         }
-                        HStack {
-                            Spacer()
-                            Text("Historique des activités")
-                                .font(.caption)
-                            Image(systemName: "chevron.forward")
+                        NavigationLink {
+                            FitnessListView().environment(vm)
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text("Historique des activités")
+                                    .font(.caption)
+                                Image(systemName: "chevron.forward")
+                            }
+                            .foregroundStyle(Color.Label.secondary)
                         }
-                        .foregroundStyle(Color.Label.secondary)
                     }
                 }
                 .padding()

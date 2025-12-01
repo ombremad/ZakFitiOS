@@ -10,6 +10,7 @@ import SwiftUI
 struct ExerciseRow: View {
     let name: String
     let icon: String
+    let level: Int
     let date: Date
     let length: Int
     let calories: Int
@@ -21,9 +22,14 @@ struct ExerciseRow: View {
                 .foregroundStyle(Color.Label.tertiary)
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(name)
-                    .font(.listHeader)
-                    .foregroundStyle(Color.Label.secondary)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(name)
+                        .font(.listHeader)
+                        .foregroundStyle(Color.Label.secondary)
+                    Text("Intensité " + level.description)
+                        .font(.listDetail)
+                        .foregroundStyle(Color.Label.tertiary)
+                }
                 
                 VStack(alignment: .leading) {
                     Text(date.formatted(.dateTime))
@@ -57,6 +63,7 @@ struct ExerciseRow: View {
     ExerciseRow(
         name: "Yoga",
         icon: "figure.yoga",
+        level: 0,
         date: .now,
         length: 20,
         calories: 155

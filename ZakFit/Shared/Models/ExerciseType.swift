@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class ExerciseType: Identifiable {
+class ExerciseType: Identifiable, Hashable {
     let id: UUID
     let name: String
     let icon: String
@@ -21,5 +21,13 @@ class ExerciseType: Identifiable {
         self.icon = icon
         self.level = level
         self.calsPerMinute = calsPerMinute
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: ExerciseType, rhs: ExerciseType) -> Bool {
+        lhs.id == rhs.id
     }
 }
