@@ -12,6 +12,7 @@ class MainViewModel {
     let validation = FieldValidation.shared
 
     // system
+    var selectedTab: AppTab = .dashboard
     var isLoading: Bool = false
     var errorMessage: String = ""
 

@@ -12,14 +12,14 @@ struct TabContainer: View {
     
     var body: some View {
         VStack {
-            TabView {
-                Tab("Tableau de bord", systemImage: "person.crop.circle") {
+            TabView(selection: $vm.selectedTab) {
+                Tab("Tableau de bord", systemImage: "person.crop.circle", value: .dashboard) {
                     DashboardView().environment(vm)
                 }
-                Tab("Fitness", systemImage: "figure.run.circle") {
+                Tab("Fitness", systemImage: "figure.run.circle", value: .fitness) {
                     FitnessView().environment(vm)
                 }
-                Tab("Nutrition", systemImage: "fork.knife.circle") {
+                Tab("Nutrition", systemImage: "fork.knife.circle", value: .nutrition) {
                     NutritionView().environment(vm)
                 }
             }

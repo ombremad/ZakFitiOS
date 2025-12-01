@@ -34,7 +34,7 @@ struct DashboardView: View {
             .frame(maxWidth: .infinity)
             .background(LinearGradient.accent)
             .cornerRadius(25)
-            
+
             HStack {
                 VStack(alignment: .leading) {
                     Text("Définir mon programme")
