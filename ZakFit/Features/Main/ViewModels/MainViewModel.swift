@@ -15,7 +15,10 @@ class MainViewModel {
     var isLoading: Bool = false
     var errorMessage: String = ""
 
-    // values
+    // dashboard values
     var user = User()
     var calsToday: Int?
+    
+    // fitness values
+    var exercises: [Exercise] = []
 }

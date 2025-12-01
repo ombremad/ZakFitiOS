@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserResponse: Codable {
+struct UserResponse: Decodable {
     let id: UUID
     let firstName: String?
     let lastName: String?

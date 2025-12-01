@@ -17,7 +17,6 @@ struct DashboardView: View {
             PieChart(amount: Double(calsToday), total: Double(goalCals), label: "Calories consommées")
         }
     }
-    
     private var programButtons: some View {
         HStack {
             HStack {
@@ -72,16 +71,16 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-                VStack(alignment: .leading, spacing: 36) {
-                    
-                    calCharts
-                    Spacer()
-                    programButtons
-                    advice
-                    
-                }
-                .padding()
-                .padding(.vertical, 32)
+            VStack(alignment: .leading, spacing: 36) {
+                
+                calCharts
+                Spacer()
+                programButtons
+                advice
+                
+            }
+            .padding()
+            .padding(.vertical, 32)
                         
             .task {
                 await vm.fetchDashboardData()

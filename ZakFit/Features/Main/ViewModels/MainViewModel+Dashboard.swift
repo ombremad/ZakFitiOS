@@ -26,6 +26,7 @@ extension MainViewModel {
             )
             calsToday = response.reduce(0) { $0 + $1.cals }
             print("Total calories today: \(String(describing: calsToday))")
+            print("Calories goal today: \(String(describing: user.goalCals))")
         } catch {
             print("Error fetching total calories for today: \(error)")
         }
