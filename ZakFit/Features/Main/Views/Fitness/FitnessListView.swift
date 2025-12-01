@@ -14,9 +14,13 @@ struct FitnessListView: View {
     @State private var selectedExerciseType: ExerciseType? = nil
     @State private var selectedLengthOption: LengthOption? = nil
     @State private var selectedDateOption: DateOption? = nil
+    @State private var selectedSortOption: SortOption? = nil
+    
     @State private var minLength: Int? = nil
     @State private var maxLength: Int? = nil
     @State private var days: Int? = nil
+    @State private var sortBy: String? = nil
+    @State private var sortOrder: String? = nil
     
     private struct LengthOption: Identifiable, Hashable {
         let id = UUID()
@@ -48,14 +52,33 @@ struct FitnessListView: View {
         DateOption(label: "Cette année", days: 365),
     ]
     
+    private struct SortOption: Identifiable, Hashable {
+        let id = UUID()
+        let label: String
+        let sortBy: String
+        let sortOrder: String
+    }
+    
+    private let sortOptions: [SortOption] = [
+        SortOption(label: "Activité (asc.)", sortBy: "exerciseType", sortOrder: "ascending"),
+        SortOption(label: "Activité (desc.)", sortBy: "exerciseType", sortOrder: "descending"),
+        SortOption(label: "Durée (asc.)", sortBy: "length", sortOrder: "ascending"),
+        SortOption(label: "Durée (desc.)",sortBy: "length", sortOrder: "descending"),
+        SortOption(label: "Date (asc.)", sortBy: "date", sortOrder: "ascending"),
+        SortOption(label: "Date (desc.)", sortBy: "date", sortOrder: "descending"),
+    ]
+    
     // Helper functions
     private func reset() {
         selectedExerciseType = nil
         selectedLengthOption = nil
         selectedDateOption = nil
+        selectedSortOption = nil
         minLength = nil
         maxLength = nil
         days = nil
+        sortBy = nil
+        sortOrder = nil
     }
     
     private func fetchExercisesWithFilters() async {
@@ -63,7 +86,9 @@ struct FitnessListView: View {
             exerciseType: selectedExerciseType?.id,
             minLength: minLength,
             maxLength: maxLength,
-            days: days
+            days: days,
+            sortBy: sortBy,
+            sortOrder: sortOrder
         )
     }
         
@@ -126,10 +151,25 @@ struct FitnessListView: View {
                                     SortingBox(label: "Date", value: selectedDateOption?.label)
                                 }
 
-
                             }
                         }
                     }
+                    
+                    HStack(spacing: 50) {
+                        Text("Activités")
+                            .font(.title2)
+                            .foregroundStyle(Color.Label.primary)
+                        Menu {
+                            Picker("Trier par", selection: $selectedSortOption) {
+                                ForEach(sortOptions) { option in
+                                    Text(option.label).tag(option as SortOption?)
+                                }
+                            }
+                        } label: {
+                            SortingBox(label: "Trier par", value: selectedSortOption?.label)
+                        }
+                    }
+                    
                     if vm.isLoading {
                         ProgressView()
                     } else {
@@ -162,6 +202,11 @@ struct FitnessListView: View {
             }
             .onChange(of: selectedDateOption) { _, newValue in
                 days = newValue?.days
+                Task { await fetchExercisesWithFilters() }
+            }
+            .onChange(of: selectedSortOption) { _, newValue in
+                sortBy = newValue?.sortBy
+                sortOrder = newValue?.sortOrder
                 Task { await fetchExercisesWithFilters() }
             }
             
