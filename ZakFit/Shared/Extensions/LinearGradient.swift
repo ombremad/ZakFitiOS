@@ -49,4 +49,10 @@ extension LinearGradient {
         startPoint: .top,
         endPoint: .bottom
     )
+    
+    static let gray = LinearGradient(
+        colors: [Color.Label.tertiary],
+        startPoint: .top,
+        endPoint: .bottom
+    )
 }

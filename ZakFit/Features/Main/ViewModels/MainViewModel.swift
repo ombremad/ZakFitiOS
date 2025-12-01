@@ -11,8 +11,11 @@ import Foundation
 class MainViewModel {
     let validation = FieldValidation.shared
 
+    // system
     var isLoading: Bool = false
     var errorMessage: String = ""
 
+    // values
     var user = User()
+    var calsToday: Int?
 }

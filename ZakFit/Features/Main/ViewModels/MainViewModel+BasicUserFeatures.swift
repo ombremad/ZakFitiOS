@@ -11,14 +11,11 @@ extension MainViewModel {
     func fetchUserData() async {
         isLoading = true
         do {
-            if user.id == nil {
-                let userResponse: UserResponse = try await NetworkService.shared.get(
-                    endpoint: "/users",
-                    requiresAuth: true
-                )
-                // Convert API response to domain model
-                user = User(from: userResponse)
-            }
+            let userResponse: UserResponse = try await NetworkService.shared.get(
+                endpoint: "/users",
+                requiresAuth: true
+            )
+            user = User(from: userResponse)
         } catch {
             print("Error: \(error)")
         }

@@ -10,10 +10,14 @@ import SwiftUI
 struct DashboardView: View {
     @Environment(MainViewModel.self) var vm
     
+    @ViewBuilder
     private var calCharts: some View {
-        Text("calCharts")
+        if let calsToday = vm.calsToday,
+           let goalCals = vm.user.goalCals {
+            PieChart(amount: Double(calsToday), total: Double(goalCals), label: "Calories consommées")
+        }
     }
-
+    
     private var programButtons: some View {
         HStack {
             HStack {
@@ -68,19 +72,19 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
                 VStack(alignment: .leading, spacing: 36) {
                     
                     calCharts
+                    Spacer()
                     programButtons
                     advice
                     
                 }
                 .padding()
-            }
+                .padding(.vertical, 32)
                         
             .task {
-                await vm.fetchUserData()
+                await vm.fetchDashboardData()
             }
             
             .toolbar {
