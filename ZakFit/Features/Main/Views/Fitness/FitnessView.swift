@@ -38,7 +38,7 @@ struct FitnessView: View {
                             }
                         }
                         NavigationLink {
-                            FitnessListView().environment(vm)
+                            ExerciseListView().environment(vm)
                         } label: {
                             HStack {
                                 Spacer()
@@ -65,8 +65,12 @@ struct FitnessView: View {
                 .sharedBackgroundVisibility(.hidden)
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Nouvelle activité", systemImage: "plus") {}
-                        .tint(Color.Button.validate)
+                    NavigationLink {
+                        NewExerciseView().environment(vm)
+                    } label: {
+                        Label("Nouvelle activité", systemImage: "plus")
+                            .tint(Color.Button.validate)
+                    }
                 }
             }
             

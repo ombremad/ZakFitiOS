@@ -126,6 +126,20 @@ final class FieldValidation {
         }
         return .success
     }
+    
+    func validateLength(_ length: Int) -> ValidationResult {
+        if length <= 0 || length > 1440 {
+            return .failure("La durée de l'exercice doit être raisonnable.")
+        }
+        return .success
+    }
+    
+    func validateCals(_ cals: Int) -> ValidationResult {
+        if cals <= 0 || cals > 30000 {
+            return .failure("Le nombre de calories doit être raisonnable.")
+        }
+        return .success
+    }
 }
 
 enum ValidationResult {

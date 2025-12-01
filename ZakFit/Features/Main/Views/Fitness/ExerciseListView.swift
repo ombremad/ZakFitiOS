@@ -1,5 +1,5 @@
 //
-//  FitnessListView.swift
+//  ExerciseListView.swift
 //  ZakFit
 //
 //  Created by Anne Ferret on 01/12/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FitnessListView: View {
+struct ExerciseListView: View {
     @Environment(MainViewModel.self) var vm
     
     // Filtering and sorting values
@@ -230,5 +230,5 @@ struct FitnessListView: View {
 }
 
 #Preview {
-    FitnessListView().environment(MainViewModel())
+    ExerciseListView().environment(MainViewModel())
 }

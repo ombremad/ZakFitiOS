@@ -53,4 +53,74 @@ extension MainViewModel {
         }
         isLoading = false
     }
+    
+    func sendNewExercise(exerciseType: ExerciseType?, length: Int?, cals: Int?) async -> Bool {
+        guard validateExerciseForm(exerciseType: exerciseType, length: length, cals: cals) else { return false }
+        guard await postNewExercise(exerciseType: exerciseType, length: length, cals: cals) else { return false }
+        return true
+    }
+    
+    func postNewExercise(exerciseType: ExerciseType?, length: Int?, cals: Int?) async -> Bool {
+        isLoading = true
+        do {
+            let request = ExerciseRequest(
+                date: .now,
+                length: length!,
+                cals: cals!,
+                exerciseTypeId: exerciseType!.id
+            )
+            
+            let response: ExerciseResponse = try await NetworkService.shared.post(
+                endpoint: "/exercises",
+                body: request,
+                requiresAuth: true
+            )
+            
+            print("Successfully posted new activity with id \(response.id)")
+            isLoading = false
+            return true
+        } catch let error as NetworkError {
+            errorMessage = error.localizedDescription
+            isLoading = false
+            return false
+        } catch {
+            errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
+            isLoading = false
+            return false
+        }
+    }
+    
+    // Field validation
+    func validateExerciseForm(exerciseType: ExerciseType?, length: Int?, cals: Int?) -> Bool {
+        errorMessage = ""
+        
+        if exerciseType == nil {
+            errorMessage = "Il est obligatoire de choisir un type d'exercice"
+            return false
+        }
+        
+        if let length = length {
+            let lengthResult = validation.validateLength(length)
+            if !lengthResult.isValid {
+                errorMessage = lengthResult.errorMessage ?? ""
+                return false
+            }
+        } else {
+            errorMessage = "Il est obligatoire de rentrer une durée."
+            return false
+        }
+        
+        if let cals = cals {
+            let calsResult = validation.validateCals(cals)
+            if !calsResult.isValid {
+                errorMessage = calsResult.errorMessage ?? ""
+                return false
+            }
+        } else {
+            errorMessage = "Il est obligatoire de rentrer le nombre de calories."
+            return false
+        }
+                
+        return true
+    }
 }

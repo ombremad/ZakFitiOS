@@ -220,7 +220,7 @@ struct UserSettingsView: View {
                     
                     Text(vm.errorMessage)
                         .font(.caption)
-
+                        .foregroundStyle(Color.Label.secondary)
                 }
                 .padding()
             }
