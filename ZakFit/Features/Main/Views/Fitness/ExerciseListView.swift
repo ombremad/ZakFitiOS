@@ -10,6 +10,9 @@ import SwiftUI
 struct ExerciseListView: View {
     @Environment(MainViewModel.self) var vm
     
+    // UX values
+    @State private var isResetting = false
+
     // Filtering and sorting values
     @State private var selectedExerciseType: ExerciseType? = nil
     @State private var selectedLengthOption: LengthOption? = nil
@@ -70,6 +73,7 @@ struct ExerciseListView: View {
     
     // Helper functions
     private func reset() {
+        isResetting = true
         selectedExerciseType = nil
         selectedLengthOption = nil
         selectedDateOption = nil
@@ -106,6 +110,7 @@ struct ExerciseListView: View {
                                 Task {
                                     reset()
                                     await vm.fetchExercises()
+                                    isResetting = false
                                 }
                             }
                             .font(.caption)
@@ -193,18 +198,22 @@ struct ExerciseListView: View {
                 await vm.fetchExercises()
             }
             .onChange(of: selectedExerciseType) { _, _ in
+                guard !isResetting else { return }
                 Task { await fetchExercisesWithFilters() }
             }
             .onChange(of: selectedLengthOption) { _, newValue in
+                guard !isResetting else { return }
                 minLength = newValue?.minLength
                 maxLength = newValue?.maxLength
                 Task { await fetchExercisesWithFilters() }
             }
             .onChange(of: selectedDateOption) { _, newValue in
+                guard !isResetting else { return }
                 days = newValue?.days
                 Task { await fetchExercisesWithFilters() }
             }
             .onChange(of: selectedSortOption) { _, newValue in
+                guard !isResetting else { return }
                 sortBy = newValue?.sortBy
                 sortOrder = newValue?.sortOrder
                 Task { await fetchExercisesWithFilters() }

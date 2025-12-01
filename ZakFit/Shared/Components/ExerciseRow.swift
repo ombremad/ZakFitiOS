@@ -20,15 +20,15 @@ struct ExerciseRow: View {
             Image(systemName: icon)
                 .font(.system(size: 32))
                 .foregroundStyle(Color.Label.tertiary)
+                .frame(width: 56)
             
             VStack(alignment: .leading, spacing: 8) {
-                VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    LevelIcon(level: level)
+                        .frame(width: 24)
                     Text(name)
                         .font(.listHeader)
                         .foregroundStyle(Color.Label.secondary)
-                    Text("Intensité " + level.description)
-                        .font(.listDetail)
-                        .foregroundStyle(Color.Label.tertiary)
                 }
                 
                 VStack(alignment: .leading) {
@@ -63,7 +63,7 @@ struct ExerciseRow: View {
     ExerciseRow(
         name: "Yoga",
         icon: "figure.yoga",
-        level: 0,
+        level: 2,
         date: .now,
         length: 20,
         calories: 155
