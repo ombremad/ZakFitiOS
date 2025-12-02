@@ -13,14 +13,10 @@ struct TabContainer: View {
     var body: some View {
         VStack {
             TabView(selection: $vm.selectedTab) {
-                Tab("Tableau de bord", systemImage: "person.crop.circle", value: .dashboard) {
-                    DashboardView().environment(vm)
-                }
-                Tab("Fitness", systemImage: "figure.run.circle", value: .fitness) {
-                    FitnessView().environment(vm)
-                }
-                Tab("Nutrition", systemImage: "fork.knife.circle", value: .nutrition) {
-                    NutritionView().environment(vm)
+                ForEach(AppTab.allCases, id: \.self) { tab in
+                    Tab(tab.title, systemImage: tab.icon, value: tab) {
+                        tab.view(vm: vm)
+                    }
                 }
             }
         }
