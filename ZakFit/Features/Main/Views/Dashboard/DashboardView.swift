@@ -11,10 +11,41 @@ struct DashboardView: View {
     @Environment(MainViewModel.self) var vm
     
     @ViewBuilder
-    private var calCharts: some View {
-        if let calsToday = vm.calsToday,
-           let goalCals = vm.user.goalCals {
-            PieChart(amount: Double(calsToday), total: Double(goalCals), label: "Calories consommées")
+    private var nutrientsOverview: some View {
+        VStack(spacing: 24) {
+                NutrientDonutPercentage(
+                    amount: vm.calsToday ?? 0,
+                    total: vm.user.goalCals ?? 9,
+                    gradient: LinearGradient.tropical,
+                    title: "Calories consommées"
+                )
+                    .frame(height: 150)
+            HStack {
+                    NutrientDonutPercentage(
+                        amount: vm.carbsToday ?? 0,
+                        total: vm.user.goalCarbs ?? 0,
+                        color: Color.Chart.carbs,
+                        title: "Glucides",
+                        isMini: true
+                    )
+                        .frame(height: 100)
+                    NutrientDonutPercentage(
+                        amount: vm.fatsToday ?? 0,
+                        total: vm.user.goalFats ?? 0,
+                        color: Color.Chart.fats,
+                        title: "Lipides",
+                        isMini: true
+                    )
+                        .frame(height: 100)
+                    NutrientDonutPercentage(
+                        amount: vm.protsToday ?? 0,
+                        total: vm.user.goalProts ?? 0,
+                        color: Color.Chart.prots,
+                        title: "Protéines",
+                        isMini: true
+                    )
+                        .frame(height: 100)
+            }
         }
     }
     private var programButtons: some View {
@@ -73,14 +104,12 @@ struct DashboardView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 36) {
                 
-                calCharts
-                Spacer()
+                nutrientsOverview
                 programButtons
                 advice
                 
             }
             .padding()
-            .padding(.vertical, 32)
                         
             .task {
                 await vm.fetchDashboardData()
