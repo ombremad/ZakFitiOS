@@ -11,6 +11,9 @@ struct MealResponse: Codable {
     let id: UUID
     let date: Date
     let cals: Int
+    let carbs: Int
+    let fats: Int
+    let prots: Int
     let mealType: MealTypeResponse
     let foods: [FoodResponse]
     
@@ -19,6 +22,9 @@ struct MealResponse: Codable {
             id: id,
             date: date,
             cals: cals,
+            carbs: carbs,
+            fats: fats,
+            prots: prots,
             mealType: mealType.toModel(),
             foods: foods.map { $0.toModel() }
         )

@@ -11,6 +11,9 @@ struct MealListItemResponse: Codable {
     let id: UUID
     let date: Date
     let cals: Int
+    let carbs: Int
+    let fats: Int
+    let prots: Int
     let mealTypeName: String
     
     func toSmallModel() -> MealSmall {
@@ -18,6 +21,9 @@ struct MealListItemResponse: Codable {
             id: id,
             date: date,
             cals: cals,
+            carbs: carbs,
+            fats: fats,
+            prots: prots,
             mealTypeName: mealTypeName
         )
     }

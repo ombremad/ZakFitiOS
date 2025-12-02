@@ -16,20 +16,20 @@ struct NutrientsTable: View {
         
     var body: some View {
         HStack(alignment: .bottom, spacing: 24) {
-            VStack(alignment: .leading, spacing: 2) {
-                if let title {
-                    Text(title)
-                        .font(.cardBigTitle)
-                }
-                
-                HStack(alignment: .bottom, spacing: 5) {
-                    Text(cals.description)
-                        .font(.cardDataSmall)
-                    Text("kcal")
-                        .font(.cardUnit)
-                        .foregroundStyle(Color.Label.tertiary)
-                        .offset(y: -3)
-                }
+            VStack(alignment: .leading) {
+                    if let title {
+                        Text(title)
+                            .font(.cardBigTitle)
+                    }
+                    
+                    HStack(alignment: .bottom, spacing: 5) {
+                        Text(cals.description)
+                            .font(.cardDataSmall)
+                        Text("kcal")
+                            .font(.cardUnit)
+                            .foregroundStyle(Color.Label.tertiary)
+                            .offset(y: -3)
+                    }
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("dont")

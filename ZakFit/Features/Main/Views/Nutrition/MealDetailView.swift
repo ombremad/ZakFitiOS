@@ -13,11 +13,34 @@ struct MealDetailView: View {
     
     var mealOverview: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text("overview")
+            Text(vm.meal.date?.formatted(.dateTime) ?? "undefined")
+                .font(.caption)
+                .foregroundStyle(Color.Label.secondary)
+            NutrientsTable(
+                cals: vm.meal.cals ?? 0,
+                carbs: vm.meal.carbs ?? 0,
+                fats: vm.meal.fats ?? 0,
+                prots: vm.meal.prots ?? 0
+            )
         }
     }
     var foodItems: some View {
-        Text("food items")
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Détail")
+                .font(.title2)
+                .foregroundStyle(Color.Label.primary)
+            if let foods = vm.meal.foods {
+                ForEach(Array(foods.indices), id: \.self) { index in
+                    NutrientsTable(
+                        title: foods[index].foodType.name,
+                        cals: foods[index].cals,
+                        carbs: foods[index].carbs,
+                        fats: foods[index].fats,
+                        prots: foods[index].prots
+                    )
+                }
+            }
+        }
     }
     
     var body: some View {
@@ -25,8 +48,12 @@ struct MealDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 36) {
                     
-                    mealOverview
-                    foodItems
+                    if vm.isLoading {
+                        ProgressView()
+                    } else {
+                        mealOverview
+                        foodItems
+                    }
                     
                 }
                 .padding()

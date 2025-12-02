@@ -14,6 +14,22 @@ class Food: Identifiable {
     let quantity: Int?
     let foodType: FoodType
     
+    var cals: Int {
+        Int(Double(weight / 100 * foodType.calsRatio))
+    }
+    
+    var carbs: Int {
+        Int(Double(weight / 100 * foodType.carbsRatio))
+    }
+    
+    var fats: Int {
+        Int(Double(weight / 100 * foodType.fatsRatio))
+    }
+    
+    var prots: Int {
+        Int(Double(weight / 100 * foodType.protsRatio))
+    }
+    
     init(
         id: UUID,
         weight: Int,

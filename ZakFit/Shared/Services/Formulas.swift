@@ -63,5 +63,6 @@ func getNutrientPercentages(fitnessProgram: FitnessProgram) -> (carbsPercentage:
 }
 
 func calculatePercentage(from: Int, relativeTo: Int) -> Int {
+    guard relativeTo > 0 else { return 0 }
     return Int(Double(from) / Double(relativeTo) * 100)
 }
