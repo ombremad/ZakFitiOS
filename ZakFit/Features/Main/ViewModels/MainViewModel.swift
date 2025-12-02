@@ -23,4 +23,7 @@ class MainViewModel {
     // fitness values
     var exercises: [Exercise] = []
     var exerciseTypes: [ExerciseType] = []
+    
+    // nutrition values
+    var meals: [Meal] = []
 }

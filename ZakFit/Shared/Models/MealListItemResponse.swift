@@ -12,4 +12,13 @@ struct MealListItemResponse: Codable {
     let date: Date
     let cals: Int
     let mealTypeName: String
+    
+    func toModel() -> Meal {
+        Meal(
+            id: id,
+            date: date,
+            cals: cals,
+            mealTypeName: mealTypeName
+        )
+    }
 }

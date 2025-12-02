@@ -45,8 +45,6 @@ extension MainViewModel {
                 requiresAuth: true
             )
             
-            print("Fetched at: \(endpoint)")
-
             exercises = response.map { $0.toModel() }
         } catch {
             print("Error fetching activities: \(error)")
