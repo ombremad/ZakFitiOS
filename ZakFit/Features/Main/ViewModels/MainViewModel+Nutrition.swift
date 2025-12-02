@@ -102,13 +102,31 @@ extension MainViewModel {
         do {
             isLoading = true
 
+            var queryParams: [String] = []
+            
+            queryParams.append("mealTypes=\(mealType.name)")
+            
+            if let restrictionTypes = restrictionTypes {
+                for restrictionType in restrictionTypes {
+                    queryParams.append("restrictionTypes[]=\(restrictionType.name)")
+                }
+            }
+            
+            let endpoint = if queryParams.isEmpty {
+                "/foodTypes"
+            } else {
+                "/foodTypes?\(queryParams.joined(separator: "&"))"
+            }
+            
+            print("Endpoint for fetching food types is \(endpoint)")
+                        
             let response: [FoodTypeResponse] = try await NetworkService.shared.get(
-                endpoint: "/foodTypes",
+                endpoint: endpoint,
                 requiresAuth: true
             )
             foodTypes = response.map { $0.toModel() }
-            print("Successfully fetched food types")
 
+            print("Successfully fetched food types")
             isLoading = false
         } catch {
             print("Error fetching food types: \(error)")
@@ -116,6 +134,26 @@ extension MainViewModel {
         }
     }
     
+//    func fetchFoodTypes(mealType: MealType, restrictionTypes: [RestrictionType]?) async {
+//        errorMessage = ""
+//
+//        do {
+//            isLoading = true
+//
+//            let response: [FoodTypeResponse] = try await NetworkService.shared.get(
+//                endpoint: "/foodTypes",
+//                requiresAuth: true
+//            )
+//            foodTypes = response.map { $0.toModel() }
+//            print("Successfully fetched food types")
+//
+//            isLoading = false
+//        } catch {
+//            print("Error fetching food types: \(error)")
+//            isLoading = false
+//        }
+//    }
+//    
     func addFoodItem(mealType: MealType, foodType: FoodType?, weight: Int?, quantity: Int?) -> Bool {
         var actualWeight: Int? = weight
         

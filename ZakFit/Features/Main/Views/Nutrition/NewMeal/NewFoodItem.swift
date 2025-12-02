@@ -80,11 +80,7 @@ struct NewFoodItem: View {
                 quantityInput
                 
             }
-            
-            .task {
-                await vm.fetchFoodTypes(mealType: mealType, restrictionTypes: vm.user.restrictionTypes)
-            }
-            
+                        
             .toolbar {
                 ToolbarItem(placement: .title) {
                     Text("Ajouter un aliment")

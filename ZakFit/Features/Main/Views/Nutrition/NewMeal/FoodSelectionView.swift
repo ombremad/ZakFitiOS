@@ -76,6 +76,10 @@ struct FoodSelectionView: View {
                 .padding()
             }
             
+            .task {
+                await vm.fetchFoodTypes(mealType: mealType, restrictionTypes: vm.user.restrictionTypes)
+            }
+            
             .toolbar {
                 ToolbarItem(placement: .title) {
                     Text(mealType.name)
