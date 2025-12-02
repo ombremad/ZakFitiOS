@@ -15,19 +15,19 @@ class Food: Identifiable {
     let foodType: FoodType
     
     var cals: Int {
-        Int(Double(weight / 100 * foodType.calsRatio))
+        Int(Double(weight) / 100.0 * Double(foodType.calsRatio))
     }
     
     var carbs: Int {
-        Int(Double(weight / 100 * foodType.carbsRatio))
+        Int(Double(weight) / 100.0 * Double(foodType.carbsRatio))
     }
     
     var fats: Int {
-        Int(Double(weight / 100 * foodType.fatsRatio))
+        Int(Double(weight) / 100.0 * Double(foodType.fatsRatio))
     }
     
     var prots: Int {
-        Int(Double(weight / 100 * foodType.protsRatio))
+        Int(Double(weight) / 100.0 * Double(foodType.protsRatio))
     }
     
     init(
@@ -41,4 +41,10 @@ class Food: Identifiable {
         self.quantity = quantity ?? nil
         self.foodType = foodType
     }
+    
+    // Convert to API request
+    func toRequest() -> FoodRequest {
+        FoodRequest(foodTypeId: foodType.id, weight: weight, quantity: quantity)
+    }
+
 }

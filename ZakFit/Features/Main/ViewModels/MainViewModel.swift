@@ -9,9 +9,8 @@ import Foundation
 
 @Observable
 class MainViewModel {
-    let validation = FieldValidation.shared
-
     // system
+    let validation = FieldValidation.shared
     var selectedTab: AppTab = .dashboard
     var isLoading: Bool = false
     var errorMessage: String = ""
@@ -29,5 +28,6 @@ class MainViewModel {
     var meals: [MealSmall] = []
     var meal: Meal = Meal()
     var mealTypes: [MealType] = []
+    var foods: [Food] = []
     var shouldNavigateToFoodSelection: Bool = false
 }
