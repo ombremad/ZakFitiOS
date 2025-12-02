@@ -44,4 +44,21 @@ class MainViewModel {
         var foods: [Food] = []
         var shouldNavigateToFoodSelection: Bool = false
     }
+    
+    // nutrition goals values
+    var nutritionGoals = NutritionGoals()
+    struct NutritionGoals {
+        var bmr: Int = 0
+        var carbsPercentage: Int = 0
+        var fatsPercentage: Int = 0
+        var protsPercentage: Int = 0
+        var calsDaily: Int = 0
+        var carbsDaily: Int = 0
+        var fatsDaily: Int = 0
+        var protsDaily: Int = 0
+        var values: Int {
+            bmr + calsDaily + carbsPercentage + fatsPercentage + protsPercentage
+        }
+        var fitnessProgram: FitnessProgram = .custom
+    }
 }

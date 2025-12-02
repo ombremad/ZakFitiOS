@@ -10,159 +10,162 @@ import SwiftUI
 struct NutritionGoal: View {
     @Environment(MainViewModel.self) var vm
     
-    // Form values
-    @State private var fitnessProgram: FitnessProgram = .custom
-    @State private var bmr: Int = 0
-    @State private var carbsPercentage: Int = 0
-    @State private var fatsPercentage: Int = 0
-    @State private var protsPercentage: Int = 0
-    @State private var calsDaily: Int = 0
-    @State private var carbsDaily: Int = 0
-    @State private var fatsDaily: Int = 0
-    @State private var protsDaily: Int = 0
-//    @State private var nutritionValues: Int {
-//        bmr + calsDaily + carbsPercentage + fatsPercentage + protsPercentage
-//    }
-
-
     // UX values
     @FocusState private var focusedField: Field?
     enum Field { case cals }
     
+    // Views
+    private var programSelection: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Mon programme")
+                .font(.title2)
+            GlassEffectContainer {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                    Button("Prise de masse") { vm.nutritionGoals.fitnessProgram = .gainMass }
+                        .buttonStyle(CustomButtonStyle(state: vm.nutritionGoals.fitnessProgram == .gainMass ? .highlight : .normal, width: .full))
+                    Button("Maintien") { vm.nutritionGoals.fitnessProgram = .maintain }
+                        .buttonStyle(CustomButtonStyle(state: vm.nutritionGoals.fitnessProgram == .maintain ? .highlight : .normal, width: .full))
+                    Button("Perte de poids") { vm.nutritionGoals.fitnessProgram = .loseWeight }
+                        .buttonStyle(CustomButtonStyle(state: vm.nutritionGoals.fitnessProgram == .loseWeight ? .highlight : .normal, width: .full))
+                }
+                Button("Programme personnalisé") { vm.nutritionGoals.fitnessProgram = .custom }
+                    .buttonStyle(CustomButtonStyle(state: vm.nutritionGoals.fitnessProgram == .custom ? .highlight : .normal, width: .full))
+            }
+        }
+    }
+    @ViewBuilder
+    private var macronutrientsValues: some View {
+        @Bindable var vm = vm
+        
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Valeurs")
+                .font(.smallTitle)
+            VStack {
+                DataBox(label: "Apport calorique par jour", icon: vm.nutritionGoals.fitnessProgram == .custom ? .numbers : .none) {
+                    Group {
+                        if vm.nutritionGoals.fitnessProgram == .custom {
+                            TextField("", value: $vm.nutritionGoals.calsDaily, format: .number)
+                        } else {
+                            Text(vm.nutritionGoals.calsDaily.description)
+                        }
+                    }
+                    .font(.cardData)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(.decimalPad)
+                    .submitLabel(.go)
+                    .focused($focusedField, equals: .cals)
+                    Text("cal")
+                        .font(.cardUnit)
+                        .offset(y: -5)
+                }
+                .onTapGesture {
+                    focusedField = .cals
+                }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: vm.nutritionGoals.fitnessProgram == .custom ? 300: 100))], spacing: 16) {
+                    DataBox(label: "Glucides", icon: vm.nutritionGoals.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.nutritionGoals.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.nutritionGoals.carbsPercentage) },
+                                        set: { vm.nutritionGoals.carbsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.nutritionGoals.carbsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.nutritionGoals.carbsDaily.description + " cal")
+                            }
+                        }
+                    }
+                    DataBox(label: "Lipides", icon: vm.nutritionGoals.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.nutritionGoals.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.nutritionGoals.fatsPercentage) },
+                                        set: { vm.nutritionGoals.fatsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.nutritionGoals.fatsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.nutritionGoals.fatsDaily.description + " cal")
+                            }
+                        }
+                    }
+                    DataBox(label: "Protéines", icon: vm.nutritionGoals.fitnessProgram == .custom ? .slider : .none) {
+                        Group {
+                            if vm.nutritionGoals.fitnessProgram == .custom {
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(vm.nutritionGoals.protsPercentage) },
+                                        set: { vm.nutritionGoals.protsPercentage = Int($0) }
+                                    ),
+                                    in: 5...95,
+                                    step: 5
+                                )
+                                .padding(.trailing, 16)
+                            }
+                            VStack {
+                                HStack(alignment: .bottom) {
+                                    Text(vm.nutritionGoals.protsPercentage.description)
+                                        .font(.cardData)
+                                        .multilineTextAlignment(.trailing)
+                                    Text("%")
+                                        .font(.cardUnit)
+                                        .offset(y: -5)
+                                }
+                                Text(vm.nutritionGoals.protsDaily.description + " cal")
+                            }
+                        }
+                    }
+                }
+//                .onChange(of: vm.nutritionGoals.fitnessProgram) {
+//                    vm.getRepartition()
+//                }
+//                .onChange(of: vm.nutritionGoals.values) {
+//                    vm.calculateDailyValues()
+//                }
+            }
+        }
+    }
+    
     var body: some View {
+        
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 36) {
-                    Text("Mon programme")
-                        .font(.title2)
-                    GlassEffectContainer {
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
-                            Button("Prise de masse") { fitnessProgram = .gainMass }
-                                .buttonStyle(CustomButtonStyle(state: fitnessProgram == .gainMass ? .highlight : .normal, width: .full))
-                            Button("Maintien") { fitnessProgram = .maintain }
-                                .buttonStyle(CustomButtonStyle(state: fitnessProgram == .maintain ? .highlight : .normal, width: .full))
-                            Button("Perte de poids") { fitnessProgram = .loseWeight }
-                                .buttonStyle(CustomButtonStyle(state: fitnessProgram == .loseWeight ? .highlight : .normal, width: .full))
-                        }
-                        Button("Programme personnalisé") { fitnessProgram = .custom }
-                            .buttonStyle(CustomButtonStyle(state: fitnessProgram == .custom ? .highlight : .normal, width: .full))
-                    }
-                    Text("Valeurs")
-                        .font(.smallTitle)
-                    VStack {
-                        DataBox(label: "Apport calorique par jour", icon: fitnessProgram == .custom ? .numbers : .none) {
-                            Group {
-                                if fitnessProgram == .custom {
-                                    TextField("", value: $calsDaily, format: .number)
-                                } else {
-                                    Text(calsDaily.description)
-                                }
-                            }
-                            .font(.cardData)
-                            .multilineTextAlignment(.trailing)
-                            .keyboardType(.decimalPad)
-                            .submitLabel(.go)
-                            .focused($focusedField, equals: .cals)
-                            Text("cal")
-                                .font(.cardUnit)
-                                .offset(y: -5)
-                        }
-                        .onTapGesture {
-                            focusedField = .cals
-                        }
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: fitnessProgram == .custom ? 300: 100))], spacing: 16) {
-                            DataBox(label: "Glucides", icon: fitnessProgram == .custom ? .slider : .none) {
-                                Group {
-                                    if fitnessProgram == .custom {
-                                        Slider(
-                                            value: Binding(
-                                                get: { Double(carbsPercentage) },
-                                                set: { carbsPercentage = Int($0) }
-                                            ),
-                                            in: 5...95,
-                                            step: 5
-                                        )
-                                        .padding(.trailing, 16)
-                                    }
-                                    VStack {
-                                        HStack(alignment: .bottom) {
-                                            Text(carbsPercentage.description)
-                                                .font(.cardData)
-                                                .multilineTextAlignment(.trailing)
-                                            Text("%")
-                                                .font(.cardUnit)
-                                                .offset(y: -5)
-                                        }
-                                        Text(carbsDaily.description + " cal")
-                                    }
-                                }
-                            }
-                            DataBox(label: "Lipides", icon: fitnessProgram == .custom ? .slider : .none) {
-                                Group {
-                                    if fitnessProgram == .custom {
-                                        Slider(
-                                            value: Binding(
-                                                get: { Double(fatsPercentage) },
-                                                set: { fatsPercentage = Int($0) }
-                                            ),
-                                            in: 5...95,
-                                            step: 5
-                                        )
-                                        .padding(.trailing, 16)
-                                    }
-                                    VStack {
-                                        HStack(alignment: .bottom) {
-                                            Text(fatsPercentage.description)
-                                                .font(.cardData)
-                                                .multilineTextAlignment(.trailing)
-                                            Text("%")
-                                                .font(.cardUnit)
-                                                .offset(y: -5)
-                                        }
-                                        Text(fatsDaily.description + " cal")
-                                    }
-                                }
-                            }
-                            DataBox(label: "Protéines", icon: fitnessProgram == .custom ? .slider : .none) {
-                                Group {
-                                    if fitnessProgram == .custom {
-                                        Slider(
-                                            value: Binding(
-                                                get: { Double(protsPercentage) },
-                                                set: { protsPercentage = Int($0) }
-                                            ),
-                                            in: 5...95,
-                                            step: 5
-                                        )
-                                        .padding(.trailing, 16)
-                                    }
-                                    VStack {
-                                        HStack(alignment: .bottom) {
-                                            Text(protsPercentage.description)
-                                                .font(.cardData)
-                                                .multilineTextAlignment(.trailing)
-                                            Text("%")
-                                                .font(.cardUnit)
-                                                .offset(y: -5)
-                                        }
-                                        Text(protsDaily.description + " cal")
-                                    }
-                                }
-                            }
-                        }
-                    }
-//                    .onChange(of: fitnessProgram) {
-//                        vm.getRepartition()
-//                    }
-//                    .onChange(of: nutritionValues) {
-//                        vm.calculateDailyValues()
-//                    }
+                    
+                    programSelection
+                    macronutrientsValues
+                    
                 }
                 .padding()
             }
             
             .task {
-                bmr = vm.user.bmr ?? 0
+                vm.nutritionGoals.bmr = Int(vm.user.bmr ?? 0)
             }
             
             .toolbar {
