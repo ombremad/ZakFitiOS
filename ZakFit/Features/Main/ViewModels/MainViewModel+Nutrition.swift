@@ -38,7 +38,7 @@ extension MainViewModel {
         }
         isLoading = false
     }
-        
+    
     func fetchMealDetail(id: UUID) async {
         isLoading = true
         do {
@@ -53,5 +53,64 @@ extension MainViewModel {
             print("Error fetching meal detail: \(error)")
         }
         isLoading = false
+    }
+    
+    func initNewMeal() async {
+        if mealTypes.isEmpty {
+            await fetchMealTypes()
+        }
+    }
+    
+    func fetchMealTypes() async {
+        isLoading = true
+        do {
+            let response: [MealTypeResponse] = try await NetworkService.shared.get(
+                endpoint: "/mealTypes",
+                requiresAuth: true
+            )
+            
+            mealTypes = response.map { $0.toModel() }
+            print("Successfully fetched meal types")
+        } catch {
+            print("Error fetching meal types: \(error)")
+        }
+        isLoading = false
+    }
+    
+    func goToFoodSelection(selectedMealType: MealType?, date: Date) {
+        errorMessage = ""
+        
+        if selectedMealType == nil {
+            errorMessage = "Il est obligatoire de choisir un type de repas."
+            return
+        }
+        
+        let dateResult = validation.validateDate(date)
+        if !dateResult.isValid {
+            errorMessage = dateResult.errorMessage ?? ""
+            return
+        }
+        
+        shouldNavigateToFoodSelection = true
+    }
+    
+    func fetchFoodTypes(mealType: MealType, restrictionTypes: [RestrictionType]?) async {
+        errorMessage = ""
+
+        do {
+            isLoading = true
+
+            let response: [FoodTypeResponse] = try await NetworkService.shared.get(
+                endpoint: "/foodTypes",
+                requiresAuth: true
+            )
+            foodTypes = response.map { $0.toModel() }
+            print("Successfully fetched food types")
+
+            isLoading = false
+        } catch {
+            print("Error fetching food types: \(error)")
+            isLoading = false
+        }
     }
 }

@@ -22,4 +22,5 @@ struct UserResponse: Decodable {
     let goalCarbs: Int?
     let goalFats: Int?
     let goalProts: Int?
+    let restrictionTypes: [RestrictionTypeResponse]?
 }

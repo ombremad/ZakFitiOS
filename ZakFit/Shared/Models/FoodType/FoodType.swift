@@ -34,4 +34,12 @@ class FoodType: Identifiable {
         self.protsRatio = protsRatio
         self.weightPerServing = weightPerServing ?? nil
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: FoodType, rhs: FoodType) -> Bool {
+        lhs.id == rhs.id
+    }
 }

@@ -10,20 +10,20 @@ import Foundation
 struct FoodTypeResponse: Codable {
     let id: UUID
     let name: String
-    let calsRatio: Int
-    let carbsRatio: Int
-    let fatsRatio: Int
-    let protsRatio: Int
+    let calsRatio: Int?
+    let carbsRatio: Int?
+    let fatsRatio: Int?
+    let protsRatio: Int?
     let weightPerServing: Int?
     
     func toModel() -> FoodType {
         FoodType(
             id: id,
             name: name,
-            calsRatio: calsRatio,
-            carbsRatio: carbsRatio,
-            fatsRatio: fatsRatio,
-            protsRatio: protsRatio,
+            calsRatio: calsRatio ?? 0,
+            carbsRatio: carbsRatio ?? 0,
+            fatsRatio: fatsRatio ?? 0,
+            protsRatio: protsRatio ?? 0,
             weightPerServing: weightPerServing ?? nil
         )
     }

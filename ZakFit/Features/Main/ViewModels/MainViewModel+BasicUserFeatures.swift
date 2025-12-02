@@ -16,8 +16,9 @@ extension MainViewModel {
                 requiresAuth: true
             )
             user = User(from: userResponse)
+            print("Successfully fetched user data for user \(user.firstName ?? "undefined") \(user.lastName ?? "undefined")")
         } catch {
-            print("Error: \(error)")
+            print("Error fetching user data: \(error)")
         }
         isLoading = false
     }
@@ -25,10 +26,10 @@ extension MainViewModel {
     func logout() {
         do {
             try AuthManager.shared.logout()
+            user = User()
+            print("User logged out successfully")
         } catch {
             print("Error logging out: \(error.localizedDescription)")
         }
-        user = User()
-        print("User logged out successfully")
     }
 }

@@ -24,6 +24,7 @@ final class User {
     var goalCarbs: Int?
     var goalFats: Int?
     var goalProts: Int?
+    var restrictionTypes: [RestrictionType]?
     
     init(
         id: UUID? = nil,
@@ -39,7 +40,8 @@ final class User {
         goalCals: Int? = nil,
         goalCarbs: Int? = nil,
         goalFats: Int? = nil,
-        goalProts: Int? = nil
+        goalProts: Int? = nil,
+        restrictionTypes: [RestrictionType]? = nil
     ) {
         self.id = id
         self.firstName = firstName
@@ -55,6 +57,7 @@ final class User {
         self.goalCarbs = goalCarbs
         self.goalFats = goalFats
         self.goalProts = goalProts
+        self.restrictionTypes = restrictionTypes
     }
     
     // Convenience initializer from API response
@@ -73,7 +76,8 @@ final class User {
             goalCals: response.goalCals,
             goalCarbs: response.goalCarbs,
             goalFats: response.goalFats,
-            goalProts: response.goalProts
+            goalProts: response.goalProts,
+            restrictionTypes: response.restrictionTypes?.map { RestrictionType(from: $0) }
         )
     }
     

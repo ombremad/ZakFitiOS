@@ -55,18 +55,36 @@ class NetworkService {
         
         // Handle status codes
         switch httpResponse.statusCode {
-        case 200...299:
-            // Success - decode the response
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase  // Add this!
-            decoder.dateDecodingStrategy = .iso8601
-            
-            do {
-                return try decoder.decode(T.self, from: data)
-            } catch {
-                throw NetworkError.decodingError
-            }
-        case 401:
+            case 200...299:
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                decoder.dateDecodingStrategy = .iso8601
+                
+                do {
+                    return try decoder.decode(T.self, from: data)
+                } catch {
+                    print("DECODING ERROR DETAILS:")
+                    print("Raw data: \(String(data: data, encoding: .utf8) ?? "Unable to convert to string")")
+                    print("Actual error: \(error)")
+                    
+                    if let decodingError = error as? DecodingError {
+                        switch decodingError {
+                        case .keyNotFound(let key, let context):
+                            print("Missing key: '\(key.stringValue)' at path: \(context.codingPath)")
+                        case .typeMismatch(let type, let context):
+                            print("Type mismatch for type '\(type)' at path: \(context.codingPath)")
+                        case .valueNotFound(let type, let context):
+                            print("Value not found for type '\(type)' at path: \(context.codingPath)")
+                        case .dataCorrupted(let context):
+                            print("Data corrupted: \(context.debugDescription)")
+                        @unknown default:
+                            print("Unknown decoding error")
+                        }
+                    }
+                    
+                    throw NetworkError.decodingError
+                }
+            case 401:
             throw NetworkError.unauthorized
         default:
             throw NetworkError.serverError(statusCode: httpResponse.statusCode)

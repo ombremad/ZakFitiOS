@@ -10,4 +10,11 @@ import Foundation
 struct RestrictionTypeResponse: Codable {
     let id: UUID
     let name: String
+    
+    func toModel() -> RestrictionType {
+        RestrictionType(
+            id: id,
+            name: name
+        )
+    }
 }

@@ -140,6 +140,22 @@ final class FieldValidation {
         }
         return .success
     }
+    
+    func validateDate(_ date: Date) -> ValidationResult {
+        let calendar = Calendar.current
+        let today = Date()
+        let ageComponents = calendar.dateComponents([.year], from: date, to: today)
+        
+        if date > today {
+            return .failure("La date ne peut pas se situer dans le futur.")
+        }
+        
+        if let age = ageComponents.year, age > 50 {
+            return .failure("La date doit être raisonnable.")
+        }
+        
+        return .success
+    }
 }
 
 enum ValidationResult {
