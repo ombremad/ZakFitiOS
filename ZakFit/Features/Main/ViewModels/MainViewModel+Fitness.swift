@@ -53,7 +53,6 @@ extension MainViewModel {
     }
     
     func fetchExerciseTypes() async {
-        if exerciseTypes.isEmpty { return }
         isLoading = true
         do {
             let response: [ExerciseTypeResponse] = try await NetworkService.shared.get(

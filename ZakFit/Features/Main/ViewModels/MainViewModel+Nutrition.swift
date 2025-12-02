@@ -153,6 +153,7 @@ extension MainViewModel {
             let mealResponse = response.toModel()
             
             print("Successfully posted meal with ID: \(mealResponse.id, default: "undefined")")
+            needsRefresh = true
             isLoading = false
         } catch {
             print("Error posting meal: \(error)")
