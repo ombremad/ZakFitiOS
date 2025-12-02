@@ -57,6 +57,11 @@ struct FoodSelectionView: View {
                 totalProts = vm.foods.reduce(0) { $0 + $1.prots }
             }
         }
+        VStack {
+            Text(vm.errorMessage)
+                .font(.caption)
+                .foregroundStyle(Color.Label.secondary)
+        }
     }
 
     var body: some View {

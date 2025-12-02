@@ -53,6 +53,7 @@ struct FitnessView: View {
                 .padding()
             }
             .task {
+                await vm.fetchExerciseTypes()
                 await vm.fetchExercises(days: 3)
             }
             

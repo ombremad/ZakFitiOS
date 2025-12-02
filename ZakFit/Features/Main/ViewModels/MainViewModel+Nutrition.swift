@@ -151,6 +151,7 @@ extension MainViewModel {
                 requiresAuth: true
             )
             let mealResponse = response.toModel()
+            
             print("Successfully posted meal with ID: \(mealResponse.id, default: "undefined")")
             isLoading = false
         } catch {

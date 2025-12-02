@@ -18,6 +18,10 @@ class MainViewModel {
     // dashboard values
     var user = User()
     var calsToday: Int?
+    var carbsToday: Int?
+    var fatsToday: Int?
+    var protsToday: Int?
+    var needsRefresh: Bool = false
     
     // fitness values
     var exercises: [Exercise] = []

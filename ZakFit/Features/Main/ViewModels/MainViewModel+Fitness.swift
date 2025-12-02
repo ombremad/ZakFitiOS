@@ -52,6 +52,22 @@ extension MainViewModel {
         isLoading = false
     }
     
+    func fetchExerciseTypes() async {
+        if exerciseTypes.isEmpty { return }
+        isLoading = true
+        do {
+            let response: [ExerciseTypeResponse] = try await NetworkService.shared.get(
+                endpoint: "/exerciseTypes",
+                requiresAuth: true
+            )
+            exerciseTypes = response.map { $0.toModel() }
+            print("Successfully fetched list of exerciseTypes")
+        } catch {
+            print("Error fetching list of exerciseTypes: \(error)")
+        }
+        isLoading = false
+    }
+    
     func sendNewExercise(exerciseType: ExerciseType?, length: Int?, cals: Int?) async -> Bool {
         guard validateExerciseForm(exerciseType: exerciseType, length: length, cals: cals) else { return false }
         guard await postNewExercise(exerciseType: exerciseType, length: length, cals: cals) else { return false }
