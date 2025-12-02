@@ -52,13 +52,16 @@ func getNutrientPercentages(fitnessProgram: FitnessProgram) -> (carbsPercentage:
                 carbsPercentage: 30,
                 fatsPercentage: 25,
                 protsPercentage: 45
-                )
+            )
         default:
             return (
                 carbsPercentage: 40,
                 fatsPercentage: 30,
                 protsPercentage: 30
-                )
+            )
     }
+}
 
+func calculatePercentage(from: Int, relativeTo: Int) -> Int {
+    return Int(Double(from) / Double(relativeTo) * 100)
 }

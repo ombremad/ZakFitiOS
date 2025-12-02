@@ -11,11 +11,23 @@ struct MealDetailView: View {
     @Environment(MainViewModel.self) var vm
     let id: UUID
     
+    var mealOverview: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("overview")
+        }
+    }
+    var foodItems: some View {
+        Text("food items")
+    }
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
-                    Text("a")
+                VStack(alignment: .leading, spacing: 36) {
+                    
+                    mealOverview
+                    foodItems
+                    
                 }
                 .padding()
             }
@@ -40,8 +52,4 @@ struct MealDetailView: View {
             }
         }
     }
-}
-
-#Preview {
-    MealDetailView(id: UUID(uuidString: "61EF3CDA-0BA1-48A5-A0C0-A1BBE6845DC5")!)
 }
