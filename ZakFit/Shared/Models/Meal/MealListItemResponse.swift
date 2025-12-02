@@ -13,8 +13,8 @@ struct MealListItemResponse: Codable {
     let cals: Int
     let mealTypeName: String
     
-    func toModel() -> Meal {
-        Meal(
+    func toSmallModel() -> MealSmall {
+        MealSmall(
             id: id,
             date: date,
             cals: cals,

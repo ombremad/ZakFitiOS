@@ -1,5 +1,5 @@
 //
-//  Meal.swift
+//  MealSmall.swift
 //  ZakFit
 //
 //  Created by Anne Ferret on 02/12/2025.
@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-class Meal: Identifiable {
+class MealSmall: Identifiable {
     let id: UUID
     let date: Date
     let cals: Int

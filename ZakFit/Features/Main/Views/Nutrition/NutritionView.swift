@@ -22,11 +22,15 @@ struct NutritionView: View {
             }
             GlassEffectContainer {
                 ForEach(vm.meals) { meal in
-                    MealRow(
-                        name: meal.mealTypeName,
-                        date: meal.date,
-                        calories: meal.cals
-                    )
+                    NavigationLink {
+                        MealDetailView(id: meal.id).environment(vm)
+                    } label: {
+                        MealRow(
+                            name: meal.mealTypeName,
+                            date: meal.date,
+                            calories: meal.cals
+                        )
+                    }
                 }
             }
             NavigationLink {

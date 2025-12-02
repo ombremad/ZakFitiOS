@@ -1,5 +1,5 @@
 //
-//  NewMealView.swift
+//  MealDetailView.swift
 //  ZakFit
 //
 //  Created by Anne Ferret on 02/12/2025.
@@ -7,32 +7,29 @@
 
 import SwiftUI
 
-struct NewMealView: View {
+struct MealDetailView: View {
     @Environment(MainViewModel.self) var vm
+    let id: UUID
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("New Meal View")
+            ScrollView {
+                VStack {
+                    Text("a")
+                }
+                .padding()
             }
-            .padding()
+            .task {
+                await vm.fetchMealDetail(id: id)
+            }
             
             .toolbar {
                 ToolbarItem(placement: .title) {
-                    Text("Nouveau repas")
+                    Text(vm.meal.mealType?.name ?? "undefined")
                         .font(.smallTitle)
                         .foregroundStyle(Color.Label.primary)
                 }
                 .sharedBackgroundVisibility(.hidden)
-
-                ToolbarItem(placement: .confirmationAction) {
-                    NavigationLink {
-                        NewMealView().environment(vm)
-                    } label: {
-                        Label("Nouveau repas", systemImage: "plus")
-                            .tint(Color.Button.validate)
-                    }
-                }
             }
             
             .navigationBarTitleDisplayMode(.inline)
@@ -42,10 +39,9 @@ struct NewMealView: View {
                     .ignoresSafeArea()
             }
         }
-        
     }
 }
 
 #Preview {
-    NewMealView().environment(MainViewModel())
+    MealDetailView(id: UUID(uuidString: "61EF3CDA-0BA1-48A5-A0C0-A1BBE6845DC5")!)
 }
