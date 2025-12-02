@@ -13,14 +13,14 @@ struct MealDetailView: View {
     
     var mealOverview: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text(vm.meal.date?.formatted(.dateTime) ?? "undefined")
+            Text(vm.nutrition.meal.date?.formatted(.dateTime) ?? "undefined")
                 .font(.caption)
                 .foregroundStyle(Color.Label.secondary)
             NutrientsTable(
-                cals: vm.meal.cals ?? 0,
-                carbs: vm.meal.carbs ?? 0,
-                fats: vm.meal.fats ?? 0,
-                prots: vm.meal.prots ?? 0
+                cals: vm.nutrition.meal.cals ?? 0,
+                carbs: vm.nutrition.meal.carbs ?? 0,
+                fats: vm.nutrition.meal.fats ?? 0,
+                prots: vm.nutrition.meal.prots ?? 0
             )
         }
     }
@@ -29,7 +29,7 @@ struct MealDetailView: View {
             Text("Détail")
                 .font(.title2)
                 .foregroundStyle(Color.Label.primary)
-            if let foods = vm.meal.foods {
+            if let foods = vm.nutrition.meal.foods {
                 ForEach(Array(foods.indices), id: \.self) { index in
                     NutrientsTable(
                         title: foods[index].foodType.name,
@@ -64,7 +64,7 @@ struct MealDetailView: View {
             
             .toolbar {
                 ToolbarItem(placement: .title) {
-                    Text(vm.meal.mealType?.name ?? "undefined")
+                    Text(vm.nutrition.meal.mealType?.name ?? "undefined")
                         .font(.smallTitle)
                         .foregroundStyle(Color.Label.primary)
                 }

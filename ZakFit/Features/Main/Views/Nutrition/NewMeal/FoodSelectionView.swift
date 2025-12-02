@@ -26,7 +26,7 @@ struct FoodSelectionView: View {
                 .font(.title2)
                 .foregroundStyle(Color.Label.primary)
             
-            ForEach(vm.foods) { food in
+            ForEach(vm.nutrition.foods) { food in
                 NutrientsTable(title: food.foodType.name, cals: food.cals, carbs: food.carbs, fats: food.fats, prots: food.prots)
             }
 
@@ -42,7 +42,7 @@ struct FoodSelectionView: View {
         }
     }
     @ViewBuilder private var total: some View {
-        if !vm.foods.isEmpty {
+        if !vm.nutrition.foods.isEmpty {
             VStack(alignment: .leading, spacing: 24) {
                 Text("Total")
                     .font(.title2)
@@ -51,10 +51,10 @@ struct FoodSelectionView: View {
                 NutrientsTable(cals: totalCals, carbs: totalCarbs, fats: totalFats, prots: totalProts)
             }
             .task {
-                totalCals = vm.foods.reduce(0) { $0 + $1.cals }
-                totalCarbs = vm.foods.reduce(0) { $0 + $1.carbs }
-                totalFats = vm.foods.reduce(0) { $0 + $1.fats }
-                totalProts = vm.foods.reduce(0) { $0 + $1.prots }
+                totalCals = vm.nutrition.foods.reduce(0) { $0 + $1.cals }
+                totalCarbs = vm.nutrition.foods.reduce(0) { $0 + $1.carbs }
+                totalFats = vm.nutrition.foods.reduce(0) { $0 + $1.fats }
+                totalProts = vm.nutrition.foods.reduce(0) { $0 + $1.prots }
             }
         }
         VStack {

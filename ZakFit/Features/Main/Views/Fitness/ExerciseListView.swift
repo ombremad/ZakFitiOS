@@ -121,7 +121,7 @@ struct ExerciseListView: View {
                             HStack {
                                 Menu {
                                     Picker("Activité", selection: $selectedExerciseType) {
-                                        ForEach(vm.exerciseTypes) { exerciseType in
+                                        ForEach(vm.fitness.exerciseTypes) { exerciseType in
                                             Label {
                                                 Text("\(exerciseType.name) (int. \(exerciseType.level.description))")
                                                     .font(.listHeader)
@@ -179,7 +179,7 @@ struct ExerciseListView: View {
                         ProgressView()
                     } else {
                         GlassEffectContainer {
-                            ForEach(vm.exercises) { exercise in
+                            ForEach(vm.fitness.exercises) { exercise in
                                 ExerciseRow(
                                     name: exercise.exerciseType.name,
                                     icon: exercise.exerciseType.icon,

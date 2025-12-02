@@ -25,7 +25,7 @@ struct NewFoodItem: View {
     private var foodTypeList: some View {
         ScrollView {
             VStack {
-                ForEach(vm.foodTypes) { foodType in
+                ForEach(vm.nutrition.foodTypes) { foodType in
                     FoodTypeRow(name: foodType.name, isSelected: selectedFoodType?.id == foodType.id)
                         .onTapGesture {
                             withAnimation {

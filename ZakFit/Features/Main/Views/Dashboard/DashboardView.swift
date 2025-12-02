@@ -14,7 +14,7 @@ struct DashboardView: View {
     private var nutrientsOverview: some View {
         VStack(spacing: 24) {
                 NutrientDonutPercentage(
-                    amount: vm.calsToday ?? 0,
+                    amount: vm.dashboard.calsToday ?? 0,
                     total: vm.user.goalCals ?? 9,
                     gradient: LinearGradient.tropical,
                     title: "Calories consommées"
@@ -22,7 +22,7 @@ struct DashboardView: View {
                     .frame(height: 150)
             HStack {
                     NutrientDonutPercentage(
-                        amount: vm.carbsToday ?? 0,
+                        amount: vm.dashboard.carbsToday ?? 0,
                         total: vm.user.goalCarbs ?? 0,
                         color: Color.Chart.carbs,
                         title: "Glucides",
@@ -30,7 +30,7 @@ struct DashboardView: View {
                     )
                         .frame(height: 100)
                     NutrientDonutPercentage(
-                        amount: vm.fatsToday ?? 0,
+                        amount: vm.dashboard.fatsToday ?? 0,
                         total: vm.user.goalFats ?? 0,
                         color: Color.Chart.fats,
                         title: "Lipides",
@@ -38,7 +38,7 @@ struct DashboardView: View {
                     )
                         .frame(height: 100)
                     NutrientDonutPercentage(
-                        amount: vm.protsToday ?? 0,
+                        amount: vm.dashboard.protsToday ?? 0,
                         total: vm.user.goalProts ?? 0,
                         color: Color.Chart.prots,
                         title: "Protéines",

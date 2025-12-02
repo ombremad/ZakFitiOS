@@ -18,7 +18,7 @@ struct MealListView: View {
                         ProgressView()
                     } else {
                         GlassEffectContainer {
-                            ForEach(vm.meals) { meal in
+                            ForEach(vm.nutrition.meals) { meal in
                                 NavigationLink {
                                     MealDetailView(id: meal.id).environment(vm)
                                 } label: {

@@ -29,7 +29,7 @@ struct NewExerciseView: View {
             ZStack {
                 ScrollView {
                     VStack {
-                        ForEach(vm.exerciseTypes) { exerciseType in
+                        ForEach(vm.fitness.exerciseTypes) { exerciseType in
                             ExerciseTypeRow(
                                 name: exerciseType.name,
                                 icon: exerciseType.icon,

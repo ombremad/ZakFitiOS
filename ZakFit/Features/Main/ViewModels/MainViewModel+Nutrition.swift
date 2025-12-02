@@ -33,7 +33,7 @@ extension MainViewModel {
                 requiresAuth: true
             )
             
-            meals = response.map { $0.toSmallModel() }
+            nutrition.meals = response.map { $0.toSmallModel() }
         } catch {
             print("Error fetching meals: \(error)")
         }
@@ -48,8 +48,8 @@ extension MainViewModel {
                 requiresAuth: true
             )
             
-            meal = response.toModel()
-            print("Successfully fetched meal detail id: \(meal.id, default: "undefined")")
+            nutrition.meal = response.toModel()
+            print("Successfully fetched meal detail id: \(nutrition.meal.id, default: "undefined")")
         } catch {
             print("Error fetching meal detail: \(error)")
         }
@@ -57,10 +57,10 @@ extension MainViewModel {
     }
     
     func initNewMeal() async {
-        if mealTypes.isEmpty {
+        if nutrition.mealTypes.isEmpty {
             await fetchMealTypes()
         }
-        foods = []
+        nutrition.foods = []
     }
         
     func fetchMealTypes() async {
@@ -71,7 +71,7 @@ extension MainViewModel {
                 requiresAuth: true
             )
             
-            mealTypes = response.map { $0.toModel() }
+            nutrition.mealTypes = response.map { $0.toModel() }
             print("Successfully fetched meal types")
         } catch {
             print("Error fetching meal types: \(error)")
@@ -93,7 +93,7 @@ extension MainViewModel {
             return
         }
         
-        shouldNavigateToFoodSelection = true
+        nutrition.shouldNavigateToFoodSelection = true
     }
     
     func fetchFoodTypes(mealType: MealType, restrictionTypes: [RestrictionType]?) async {
@@ -124,7 +124,7 @@ extension MainViewModel {
                 endpoint: endpoint,
                 requiresAuth: true
             )
-            foodTypes = response.map { $0.toModel() }
+            nutrition.foodTypes = response.map { $0.toModel() }
 
             print("Successfully fetched food types")
             isLoading = false
@@ -170,7 +170,7 @@ extension MainViewModel {
             foodType: foodType!
         )
         
-        foods.append(food)
+        nutrition.foods.append(food)
         print("Successfully added food \(food.foodType.name) to meal")
         return true
     }
@@ -178,7 +178,7 @@ extension MainViewModel {
     func addMeal(mealType: MealType, date: Date, cals: Int, carbs: Int, fats: Int, prots: Int) async -> Bool {
         guard validateMealForm(cals: cals) else { return false }
         
-        let mealRequest = MealRequest(date: date, cals: cals, carbs: carbs, fats: fats, prots: prots, mealTypeId: mealType.id, foods: foods.map { $0.toRequest() })
+        let mealRequest = MealRequest(date: date, cals: cals, carbs: carbs, fats: fats, prots: prots, mealTypeId: mealType.id, foods: nutrition.foods.map { $0.toRequest() })
 
         do {
             isLoading = true
@@ -191,7 +191,7 @@ extension MainViewModel {
             let mealResponse = response.toModel()
             
             print("Successfully posted meal with ID: \(mealResponse.id, default: "undefined")")
-            needsRefresh = true
+            dashboard.needsMacronutrientRefresh = true
             isLoading = false
         } catch {
             print("Error posting meal: \(error)")
@@ -250,7 +250,7 @@ extension MainViewModel {
     func validateMealForm(cals: Int) -> Bool {
         errorMessage = ""
         
-        if meals.isEmpty {
+        if nutrition.meals.isEmpty {
             errorMessage = "Vous devez ajouter au moins un aliment à votre repas."
             return false
         }

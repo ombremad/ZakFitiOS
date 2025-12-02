@@ -38,7 +38,7 @@ struct NewMealView: View {
             ZStack {
                 
                 VStack {
-                    ForEach(vm.mealTypes) { mealType in
+                    ForEach(vm.nutrition.mealTypes) { mealType in
                         MealTypeRow(name: mealType.name, isSelected: selectedMealType == mealType)
                             .onTapGesture {
                                 withAnimation {
@@ -108,8 +108,8 @@ struct NewMealView: View {
             }
             
             .navigationDestination(isPresented: Binding(
-                get: { vm.shouldNavigateToFoodSelection },
-                set: { vm.shouldNavigateToFoodSelection = $0 }
+                get: { vm.nutrition.shouldNavigateToFoodSelection },
+                set: { vm.nutrition.shouldNavigateToFoodSelection = $0 }
             )) {
                 FoodSelectionView(mealType: selectedMealType ?? MealType(id: UUID(), name: "undefined"), date: date).environment(vm)
             }

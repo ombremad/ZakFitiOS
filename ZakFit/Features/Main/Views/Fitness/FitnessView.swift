@@ -26,7 +26,7 @@ struct FitnessView: View {
                                 .foregroundStyle(Color.Label.tertiary)
                         }
                         GlassEffectContainer {
-                            ForEach(vm.exercises) { exercise in
+                            ForEach(vm.fitness.exercises) { exercise in
                                 ExerciseRow(
                                     name: exercise.exerciseType.name,
                                     icon: exercise.exerciseType.icon,

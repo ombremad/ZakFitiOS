@@ -45,7 +45,7 @@ extension MainViewModel {
                 requiresAuth: true
             )
             
-            exercises = response.map { $0.toModel() }
+            fitness.exercises = response.map { $0.toModel() }
         } catch {
             print("Error fetching activities: \(error)")
         }
@@ -59,7 +59,7 @@ extension MainViewModel {
                 endpoint: "/exerciseTypes",
                 requiresAuth: true
             )
-            exerciseTypes = response.map { $0.toModel() }
+            fitness.exerciseTypes = response.map { $0.toModel() }
             print("Successfully fetched list of exerciseTypes")
         } catch {
             print("Error fetching list of exerciseTypes: \(error)")
