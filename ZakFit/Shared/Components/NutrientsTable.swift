@@ -63,6 +63,7 @@ struct NutrientsTable: View {
         .lineLimit(1)
         .padding()
         .glassEffect(.regular.tint(title == nil ? .clear : Color.Card.darkBackground), in: .rect(cornerRadius: 25))
+        .contentShape(Rectangle())
     }
 }
 

@@ -155,6 +155,11 @@ extension MainViewModel {
         return true
     }
     
+    func deleteFoodItem(_ food: Food) {
+        nutrition.foods.removeAll { $0.id == food.id }
+        print("Successfully removed food \(food.foodType.name) from meal")
+    }
+    
     func addMeal(mealType: MealType, date: Date, cals: Int, carbs: Int, fats: Int, prots: Int) async -> Bool {
         guard validateMealForm(cals: cals) else { return false }
         

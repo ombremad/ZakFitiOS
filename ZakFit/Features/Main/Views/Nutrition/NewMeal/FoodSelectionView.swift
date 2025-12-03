@@ -28,6 +28,13 @@ struct FoodSelectionView: View {
             
             ForEach(vm.nutrition.foods) { food in
                 NutrientsTable(title: food.foodType.name, cals: food.cals, carbs: food.carbs, fats: food.fats, prots: food.prots)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            vm.deleteFoodItem(food)
+                        } label: {
+                            Label("Supprimer", systemImage: "trash")
+                        }
+                    }
             }
 
             HStack(alignment: .center) {
@@ -51,6 +58,12 @@ struct FoodSelectionView: View {
                 NutrientsTable(cals: totalCals, carbs: totalCarbs, fats: totalFats, prots: totalProts)
             }
             .task {
+                totalCals = vm.nutrition.foods.reduce(0) { $0 + $1.cals }
+                totalCarbs = vm.nutrition.foods.reduce(0) { $0 + $1.carbs }
+                totalFats = vm.nutrition.foods.reduce(0) { $0 + $1.fats }
+                totalProts = vm.nutrition.foods.reduce(0) { $0 + $1.prots }
+            }
+            .onChange(of: vm.nutrition.foods.count) {
                 totalCals = vm.nutrition.foods.reduce(0) { $0 + $1.cals }
                 totalCarbs = vm.nutrition.foods.reduce(0) { $0 + $1.carbs }
                 totalFats = vm.nutrition.foods.reduce(0) { $0 + $1.fats }
