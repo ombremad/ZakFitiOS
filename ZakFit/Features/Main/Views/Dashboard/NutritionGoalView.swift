@@ -1,5 +1,5 @@
 //
-//  NutritionGoal.swift
+//  NutritionGoalView.swift
 //  ZakFit
 //
 //  Created by Anne Ferret on 02/12/2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NutritionGoal: View {
+struct NutritionGoalView: View {
     @Environment(MainViewModel.self) var vm
     @Environment(\.dismiss) private var dismiss
     
@@ -203,5 +203,5 @@ struct NutritionGoal: View {
 }
 
 #Preview {
-    NutritionGoal().environment(MainViewModel())
+    NutritionGoalView().environment(MainViewModel())
 }

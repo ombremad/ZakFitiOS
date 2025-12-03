@@ -21,7 +21,7 @@ struct MealTypeRow: View {
         .foregroundStyle(isSelected ? Color.Label.vibrant : Color.Label.primary)
         .background(isSelected ? Color.accentColor : Color.clear)
         .cornerRadius(15)
-        .contentShape(RoundedRectangle(cornerRadius: 20))
+        .contentShape(RoundedRectangle(cornerRadius: 15))
     }
 }
 

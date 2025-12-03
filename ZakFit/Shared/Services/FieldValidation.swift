@@ -156,6 +156,21 @@ final class FieldValidation {
         
         return .success
     }
+    
+    func validateFrequency(_ frequency: Int?) -> ValidationResult {
+        if let frequency = frequency {
+            if frequency <= 0 {
+                return .failure("La fréquence d'entraînements par semaine ne peut être zéro.")
+            }
+            if frequency > 14 {
+                return .failure("La fréquence d'entraînements par semaine doit être raisonnable.")
+            }
+            
+            return .success
+        } else {
+            return .failure("Veuillez entrer une fréquence d'entraînements par semaine.")
+        }
+    }
 }
 
 enum ValidationResult {

@@ -10,8 +10,7 @@ import SwiftUI
 struct DashboardView: View {
     @Environment(MainViewModel.self) var vm
     
-    @ViewBuilder
-    private var nutrientsOverview: some View {
+    @ViewBuilder private var nutrientsOverview: some View {
         VStack(spacing: 24) {
                 NutrientDonutPercentage(
                     amount: vm.dashboard.calsToday ?? 0,
@@ -51,8 +50,8 @@ struct DashboardView: View {
     private var programButtons: some View {
         HStack {
             NavigationLink {
-                NutritionGoal().environment(vm)
-            } label : {
+                NutritionGoalView().environment(vm)
+            } label: {
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Définir mon programme")
@@ -70,21 +69,25 @@ struct DashboardView: View {
                 .cornerRadius(25)
             }
 
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Définir mon programme")
-                        .font(.cardTitle)
-                        .foregroundStyle(Color.Label.vibrant)
-                    Text("physique")
-                        .font(.cardBigTitle)
-                        .foregroundStyle(Color.Label.secondary)
+            NavigationLink {
+                ExerciseGoalsView().environment(vm)
+            } label: {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Définir mon programme")
+                            .font(.cardTitle)
+                            .foregroundStyle(Color.Label.vibrant)
+                        Text("physique")
+                            .font(.cardBigTitle)
+                            .foregroundStyle(Color.Label.secondary)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(LinearGradient.primary)
+                .cornerRadius(25)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(LinearGradient.primary)
-            .cornerRadius(25)
         }
     }
     private var advice: some View {

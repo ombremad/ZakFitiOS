@@ -61,4 +61,15 @@ class MainViewModel {
         }
         var fitnessProgram: FitnessProgram = .custom
     }
+    
+    // exercise goals values
+    var exerciseGoals = ExerciseGoals()
+    struct ExerciseGoals {
+        var goals: [GoalExercise] = []
+        var selectedExerciseType: ExerciseType? = nil
+        var frequency: Int? = nil
+        var goalType: GoalType = .none
+        var length: Int? = nil
+        var cals: Int? = nil
+    }
 }
