@@ -25,16 +25,18 @@ struct FitnessView: View {
                                 .font(.callout2)
                                 .foregroundStyle(Color.Label.tertiary)
                         }
-                        GlassEffectContainer {
-                            ForEach(vm.fitness.exercises) { exercise in
-                                ExerciseRow(
-                                    name: exercise.exerciseType.name,
-                                    icon: exercise.exerciseType.icon,
-                                    level: exercise.exerciseType.level,
-                                    date: exercise.date,
-                                    length: exercise.length,
-                                    calories: exercise.cals
-                                )
+                        VStack(alignment: .leading, spacing: 12) {
+                            GlassEffectContainer {
+                                ForEach(vm.fitness.exercises) { exercise in
+                                    ExerciseRow(
+                                        name: exercise.exerciseType.name,
+                                        icon: exercise.exerciseType.icon,
+                                        level: exercise.exerciseType.level,
+                                        date: exercise.date,
+                                        length: exercise.length,
+                                        calories: exercise.cals
+                                    )
+                                }
                             }
                         }
                         NavigationLink {

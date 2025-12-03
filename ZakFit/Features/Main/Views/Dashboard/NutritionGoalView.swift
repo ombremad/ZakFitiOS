@@ -52,7 +52,7 @@ struct NutritionGoalView: View {
                 .font(.cardData)
                 .multilineTextAlignment(.trailing)
                 .keyboardType(.decimalPad)
-                .submitLabel(.go)
+                .submitLabel(.next)
                 .focused($focusedField, equals: .cals)
                 Text("cal")
                     .font(.cardUnit)

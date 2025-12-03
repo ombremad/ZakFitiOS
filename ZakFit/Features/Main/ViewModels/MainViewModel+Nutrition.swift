@@ -15,44 +15,49 @@ extension MainViewModel {
     
     func fetchMeals(days: Int? = nil) async {
         isLoading = true
+        
+        var queryParams: [String] = []
+        
+        if let days = days {
+            queryParams.append("days=\(days)")
+        }
+        
+        let endpoint = if queryParams.isEmpty {
+            "/meals"
+        } else {
+            "/meals?\(queryParams.joined(separator: "&"))"
+        }
+        
         do {
-            var queryParams: [String] = []
-            
-            if let days = days {
-                queryParams.append("days=\(days)")
-            }
-            
-            let endpoint = if queryParams.isEmpty {
-                "/meals"
-            } else {
-                "/meals?\(queryParams.joined(separator: "&"))"
-            }
-            
             let response: [MealListItemResponse] = try await NetworkService.shared.get(
                 endpoint: endpoint,
                 requiresAuth: true
             )
             
+            print("Successfully fetched meals at endpoint: \(endpoint)")
             nutrition.meals = response.map { $0.toSmallModel() }
         } catch {
             print("Error fetching meals: \(error)")
         }
+        
         isLoading = false
     }
     
     func fetchMealDetail(id: UUID) async {
         isLoading = true
+        
         do {
             let response: MealResponse = try await NetworkService.shared.get(
                 endpoint: "/meals/\(id)",
                 requiresAuth: true
             )
             
-            nutrition.meal = response.toModel()
             print("Successfully fetched meal detail id: \(nutrition.meal.id, default: "undefined")")
+            nutrition.meal = response.toModel()
         } catch {
             print("Error fetching meal detail: \(error)")
         }
+        
         isLoading = false
     }
     
@@ -65,6 +70,7 @@ extension MainViewModel {
         
     func fetchMealTypes() async {
         isLoading = true
+        
         do {
             let response: [MealTypeResponse] = try await NetworkService.shared.get(
                 endpoint: "/mealTypes",
@@ -72,10 +78,11 @@ extension MainViewModel {
             )
             
             nutrition.mealTypes = response.map { $0.toModel() }
-            print("Successfully fetched meal types")
+            print("Successfully fetched \(response.count) meal types")
         } catch {
             print("Error fetching meal types: \(error)")
         }
+        
         isLoading = false
     }
     
@@ -98,40 +105,37 @@ extension MainViewModel {
     
     func fetchFoodTypes(mealType: MealType, restrictionTypes: [RestrictionType]?) async {
         errorMessage = ""
+        isLoading = true
+        
+        var queryParams: [String] = []
+        
+        queryParams.append("mealTypes=\(mealType.name)")
+        
+        if let restrictionTypes = restrictionTypes {
+            for restrictionType in restrictionTypes {
+                queryParams.append("restrictionTypes[]=\(restrictionType.name)")
+            }
+        }
+        
+        let endpoint = if queryParams.isEmpty {
+            "/foodTypes"
+        } else {
+            "/foodTypes?\(queryParams.joined(separator: "&"))"
+        }
 
         do {
-            isLoading = true
-
-            var queryParams: [String] = []
-            
-            queryParams.append("mealTypes=\(mealType.name)")
-            
-            if let restrictionTypes = restrictionTypes {
-                for restrictionType in restrictionTypes {
-                    queryParams.append("restrictionTypes[]=\(restrictionType.name)")
-                }
-            }
-            
-            let endpoint = if queryParams.isEmpty {
-                "/foodTypes"
-            } else {
-                "/foodTypes?\(queryParams.joined(separator: "&"))"
-            }
-            
-            print("Endpoint for fetching food types is \(endpoint)")
-                        
             let response: [FoodTypeResponse] = try await NetworkService.shared.get(
                 endpoint: endpoint,
                 requiresAuth: true
             )
             nutrition.foodTypes = response.map { $0.toModel() }
 
-            print("Successfully fetched food types")
-            isLoading = false
+            print("Successfully fetched food types at endpoint: \(endpoint)")
         } catch {
             print("Error fetching food types: \(error)")
-            isLoading = false
         }
+        
+        isLoading = false
     }
     
     func addFoodItem(mealType: MealType, foodType: FoodType?, weight: Int?, quantity: Int?) -> Bool {
@@ -163,13 +167,11 @@ extension MainViewModel {
     func addMeal(mealType: MealType, date: Date, cals: Int, carbs: Int, fats: Int, prots: Int) async -> Bool {
         guard validateMealForm(cals: cals) else { return false }
         
+        isLoading = true
+
         let mealRequest = MealRequest(date: date, cals: cals, carbs: carbs, fats: fats, prots: prots, mealTypeId: mealType.id, foods: nutrition.foods.map { $0.toRequest() })
         
-        print(mealRequest)
-
         do {
-            isLoading = true
-
             let response: MealResponse = try await NetworkService.shared.post(
                 endpoint: "/meals",
                 body: mealRequest,
@@ -180,13 +182,12 @@ extension MainViewModel {
             print("Successfully posted meal with ID: \(mealResponse.id, default: "undefined")")
             dashboard.needsMacronutrientRefresh = true
             isLoading = false
+            return true
         } catch {
             print("Error posting meal: \(error)")
             isLoading = false
             return false
         }
-        
-        return true
     }
         
     // Field validation

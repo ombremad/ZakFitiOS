@@ -25,6 +25,7 @@ extension MainViewModel {
     
     func postNutritionGoals() async -> Bool {
         guard validateProgramForm() else { return false }
+        isLoading = true
         
         let patch = User(
             bmr: nutritionGoals.bmr,
@@ -33,11 +34,10 @@ extension MainViewModel {
             goalFats: nutritionGoals.fatsDaily,
             goalProts: nutritionGoals.protsDaily
         )
+        
+        let request = patch.toRequest()
 
         do {
-            isLoading = true
-            let request = patch.toRequest()
-            
             let userResponse: UserResponse = try await NetworkService.shared.patch(
                 endpoint: "/users",
                 body: request,
@@ -47,10 +47,9 @@ extension MainViewModel {
             user = User(from: userResponse)
             
             print("Successfully patched user \(user.email ?? "undefined")")
-            dashboard.needsUserRefresh = true
             dashboard.needsMacronutrientRefresh = true
             isLoading = false
-            
+            return true
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
             isLoading = false
@@ -60,8 +59,6 @@ extension MainViewModel {
             isLoading = false
             return false
         }
-        
-        return true
     }
     
     func validateProgramForm() -> Bool {

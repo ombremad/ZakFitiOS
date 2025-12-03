@@ -9,8 +9,9 @@ import Foundation
 
 extension MainViewModel {
     func fetchUserData() async {
-        dashboard.needsUserRefresh = false
         isLoading = true
+        dashboard.needsUserRefresh = false
+        
         do {
             let userResponse: UserResponse = try await NetworkService.shared.get(
                 endpoint: "/users",
@@ -21,6 +22,7 @@ extension MainViewModel {
         } catch {
             print("Error fetching user data: \(error)")
         }
+        
         isLoading = false
     }
     

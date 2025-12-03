@@ -10,36 +10,37 @@ import Foundation
 extension MainViewModel {
     func fetchExercises(exerciseType: UUID? = nil, minLength: Int? = nil, maxLength: Int? = nil, days: Int? = nil, sortBy: String? = nil, sortOrder: String? = nil) async {
         isLoading = true
+        
+        var queryParams: [String] = []
+        
+        if let days = days {
+            queryParams.append("days=\(days)")
+        }
+        if let exerciseType = exerciseType {
+            queryParams.append("exerciseType=\(exerciseType.uuidString)")
+        }
+        if let minLength = minLength {
+            queryParams.append("minLength=\(minLength)")
+        }
+        if let maxLength = maxLength {
+            queryParams.append("maxLength=\(maxLength)")
+        }
+        
+        if let sortBy = sortBy {
+            queryParams.append("sortBy=\(sortBy)")
+        }
+        
+        if let sortOrder = sortOrder {
+            queryParams.append("sortOrder=\(sortOrder)")
+        }
+        
+        let endpoint = if queryParams.isEmpty {
+            "/exercises"
+        } else {
+            "/exercises?\(queryParams.joined(separator: "&"))"
+        }
+        
         do {
-            var queryParams: [String] = []
-            
-            if let days = days {
-                queryParams.append("days=\(days)")
-            }
-            if let exerciseType = exerciseType {
-                queryParams.append("exerciseType=\(exerciseType.uuidString)")
-            }
-            if let minLength = minLength {
-                queryParams.append("minLength=\(minLength)")
-            }
-            if let maxLength = maxLength {
-                queryParams.append("maxLength=\(maxLength)")
-            }
-            
-            if let sortBy = sortBy {
-                queryParams.append("sortBy=\(sortBy)")
-            }
-            
-            if let sortOrder = sortOrder {
-                queryParams.append("sortOrder=\(sortOrder)")
-            }
-            
-            let endpoint = if queryParams.isEmpty {
-                "/exercises"
-            } else {
-                "/exercises?\(queryParams.joined(separator: "&"))"
-            }
-            
             let response: [ExerciseResponse] = try await NetworkService.shared.get(
                 endpoint: endpoint,
                 requiresAuth: true
@@ -50,11 +51,13 @@ extension MainViewModel {
         } catch {
             print("Error fetching exercises: \(error)")
         }
+        
         isLoading = false
     }
     
     func fetchExerciseTypes() async {
         isLoading = true
+        
         do {
             let response: [ExerciseTypeResponse] = try await NetworkService.shared.get(
                 endpoint: "/exerciseTypes",
@@ -65,6 +68,7 @@ extension MainViewModel {
         } catch {
             print("Error fetching list of exerciseTypes: \(error)")
         }
+        
         isLoading = false
     }
     
@@ -77,14 +81,15 @@ extension MainViewModel {
     func postNewExercise(exerciseType: ExerciseType?, length: Int?, cals: Int?) async -> Bool {
         errorMessage = ""
         isLoading = true
+        
+        let request = ExerciseRequest(
+            date: .now,
+            length: length!,
+            cals: cals!,
+            exerciseTypeId: exerciseType!.id
+        )
+        
         do {
-            let request = ExerciseRequest(
-                date: .now,
-                length: length!,
-                cals: cals!,
-                exerciseTypeId: exerciseType!.id
-            )
-            
             let response: ExerciseResponse = try await NetworkService.shared.post(
                 endpoint: "/exercises",
                 body: request,

@@ -19,16 +19,14 @@ extension MainViewModel {
             )
             
             exerciseGoals.goals = response.map { $0.toModel() }
-            
             print("Successfully fetched exercise goals")
-            isLoading = false
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
-            isLoading = false
         } catch {
             errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
-            isLoading = false
         }
+        
+        isLoading = false
     }
     
     func initNewExerciseGoal() async {
@@ -44,9 +42,9 @@ extension MainViewModel {
     }
     
     func sendNewExerciseGoal() async -> Bool {
+        errorMessage = ""
         guard validateNewExerciseGoalForm() else { return false }
         
-        errorMessage = ""
         isLoading = true
         
         let request = GoalExerciseRequest(

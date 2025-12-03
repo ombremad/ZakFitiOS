@@ -11,7 +11,7 @@ struct NutritionView: View {
     @Environment(MainViewModel.self) var vm
     
     private var mealsToday: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Repas")
                     .font(.title2)

@@ -10,12 +10,7 @@ import Foundation
 extension MainViewModel {
 
     func updateSettings(_ newUser: User) async -> Bool {
-        isLoading = true
-        
-        guard validateForm(newUser) else {
-            isLoading = false
-            return false
-        }
+        guard validateForm(newUser) else { return false }
         
         if newUser.hasChanges(from: user) {
             newUser.bmr = calculateBMR(birthday: newUser.birthday!, sex: newUser.sex!, height: newUser.height!, weight: newUser.weight!)
@@ -23,14 +18,16 @@ extension MainViewModel {
             await postPatch(patch)
             await fetchUserData()
         }
-        isLoading = false
+        
         return true
     }
     
     func postPatch(_ patch: User) async {
+        isLoading = true
+        
+        let request = patch.toRequest()
+        
         do {
-            let request = patch.toRequest()
-            
             let userResponse: UserResponse = try await NetworkService.shared.patch(
                 endpoint: "/users",
                 body: request,
@@ -39,12 +36,13 @@ extension MainViewModel {
             
             user = User(from: userResponse)
             print("Successfully patched user \(user.email ?? "undefined")")
-            
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
         } catch {
             errorMessage = "Une erreur est survenue: \(error.localizedDescription)"
         }
+        
+        isLoading = false
     }
     
     func validateForm(_ formData: User) -> Bool {

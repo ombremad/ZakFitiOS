@@ -134,7 +134,7 @@ struct UserSettingsView: View {
                                 .font(.cardData)
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
-                                .submitLabel(.go)
+                                .submitLabel(.next)
                                 .focused($focusedField, equals: .weight)
                             Text("kg")
                                 .font(.cardUnit)
@@ -161,7 +161,7 @@ struct UserSettingsView: View {
                         set: { editUser.firstName = $0 }
                     ))
                     .textContentType(.givenName)
-                    .submitLabel(.go)
+                    .submitLabel(.next)
                 }
                 
                 ProfileField("Nom") {
@@ -170,7 +170,7 @@ struct UserSettingsView: View {
                         set: { editUser.lastName = $0 }
                     ))
                     .textContentType(.familyName)
-                    .submitLabel(.go)
+                    .submitLabel(.next)
                 }
                 
                 ProfileField("E-mail") {
@@ -179,7 +179,7 @@ struct UserSettingsView: View {
                         set: { editUser.email = $0 }
                     ))
                     .textContentType(.emailAddress)
-                    .submitLabel(.go)
+                    .submitLabel(.next)
                 }
             }
             .textFieldStyle(CustomTextFieldStyle())

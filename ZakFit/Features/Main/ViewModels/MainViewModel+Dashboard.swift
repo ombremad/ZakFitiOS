@@ -18,8 +18,9 @@ extension MainViewModel {
     }
     
     func fetchNutrientsToday() async {
-        dashboard.needsMacronutrientRefresh = false
         isLoading = true
+        dashboard.needsMacronutrientRefresh = false
+        
         do {
             let response: [MealListItemResponse] = try await NetworkService.shared.get(
                 endpoint: "/meals?days=1",
@@ -33,6 +34,7 @@ extension MainViewModel {
         } catch {
             print("Error fetching macronutrients for today: \(error)")
         }
+        
         isLoading = false
     }
 }
