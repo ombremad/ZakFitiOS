@@ -18,7 +18,7 @@ extension MainViewModel {
             await postPatch(patch)
             await fetchUserData()
         }
-        
+                
         return true
     }
     
@@ -36,6 +36,8 @@ extension MainViewModel {
             
             user = User(from: userResponse)
             print("Successfully patched user \(user.email ?? "undefined")")
+            print("Patch content: \(String(describing: request))")
+            print("Response content: \(String(describing: userResponse))")
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription
         } catch {
@@ -44,7 +46,7 @@ extension MainViewModel {
         
         isLoading = false
     }
-    
+        
     func validateForm(_ formData: User) -> Bool {
         errorMessage = ""
             

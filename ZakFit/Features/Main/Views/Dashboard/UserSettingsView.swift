@@ -149,6 +149,33 @@ struct UserSettingsView: View {
 
         }
     }
+    private var restrictions: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Mes restrictions alimentaires")
+                .font(.title2)
+                .foregroundStyle(Color.Label.primary)
+            Text("Je ne consomme pas de...")
+                .font(.caption)
+                .foregroundStyle(Color.Label.secondary)
+            if editUser.restrictionTypes != nil {
+                GlassEffectContainer {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 16) {
+                        ForEach(vm.nutrition.restrictionTypes) { type in
+                            Button(type.name) {
+                                if editUser.restrictionTypes!.contains(type) {
+                                    editUser.restrictionTypes!.removeAll { $0.id == type.id }
+                                } else {
+                                    editUser.restrictionTypes!.append(type)
+                                }
+                            }
+                            .buttonStyle(CustomButtonStyle(state: editUser.restrictionTypes!.contains(type) ? .highlight : .normal, width: .full))
+                        }
+                    }
+                }
+
+            }
+        }
+    }
     private var accountInfo: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("Mes infos de compte")
@@ -216,6 +243,7 @@ struct UserSettingsView: View {
                     
                     card
                     morphology
+                    restrictions
                     accountInfo
                     
                     ErrorMessage(message: vm.errorMessage)
@@ -227,6 +255,9 @@ struct UserSettingsView: View {
             .task {
                 vm.errorMessage = ""
                 editUser = vm.user.copy()
+                if vm.nutrition.restrictionTypes.isEmpty {
+                    await vm.fetchRestrictionTypes()
+                }
             }
             
             .sheet(isPresented: $showCalendar) { calendar }

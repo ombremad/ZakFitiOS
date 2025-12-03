@@ -21,4 +21,5 @@ struct UserRequest: Encodable {
     let goalCarbs: Int?
     let goalFats: Int?
     let goalProts: Int?
+    let restrictionTypeIds: [UUID]?
 }

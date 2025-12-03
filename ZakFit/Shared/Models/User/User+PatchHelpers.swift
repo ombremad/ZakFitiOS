@@ -63,22 +63,27 @@ extension User {
             updates.goalProts = self.goalProts
         }
         
+        if self.restrictionTypes != original.restrictionTypes {
+            updates.restrictionTypes = self.restrictionTypes
+        }
+        
         return updates
     }
     
     func hasChanges(from original: User) -> Bool {
         return firstName != original.firstName ||
-               lastName != original.lastName ||
-               email != original.email ||
-               birthday != original.birthday ||
-               height != original.height ||
-               weight != original.weight ||
-               sex != original.sex ||
-               bmr != original.bmr ||
-               physicalActivity != original.physicalActivity ||
-               goalCals != original.goalCals ||
-               goalCarbs != original.goalCarbs ||
-               goalFats != original.goalFats ||
-               goalProts != original.goalProts
+        lastName != original.lastName ||
+        email != original.email ||
+        birthday != original.birthday ||
+        height != original.height ||
+        weight != original.weight ||
+        sex != original.sex ||
+        bmr != original.bmr ||
+        physicalActivity != original.physicalActivity ||
+        goalCals != original.goalCals ||
+        goalCarbs != original.goalCarbs ||
+        goalFats != original.goalFats ||
+        goalProts != original.goalProts ||
+        restrictionTypes != original.restrictionTypes
     }
 }

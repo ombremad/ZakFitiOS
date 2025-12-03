@@ -38,6 +38,7 @@ class MainViewModel {
     var nutrition = Nutrition()
     struct Nutrition {
         var foodTypes: [FoodType] = []
+        var restrictionTypes: [RestrictionType] = []
         var meals: [MealSmall] = []
         var meal: Meal = Meal()
         var mealTypes: [MealType] = []

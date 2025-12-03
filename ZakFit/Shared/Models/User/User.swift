@@ -81,7 +81,6 @@ final class User {
         )
     }
     
-    // Convert to API request
     func toRequest() -> UserRequest {
         UserRequest(
             firstName: firstName,
@@ -96,7 +95,8 @@ final class User {
             goalCals: goalCals,
             goalCarbs: goalCarbs,
             goalFats: goalFats,
-            goalProts: goalProts
+            goalProts: goalProts,
+            restrictionTypeIds: restrictionTypes?.map { $0.id }
         )
     }
 }
