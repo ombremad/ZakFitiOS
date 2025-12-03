@@ -35,6 +35,7 @@ struct NewFoodItem: View {
                 }
             }
             .padding()
+            .padding(.bottom, 128)
         }
     }
     private var quantityInput: some View {

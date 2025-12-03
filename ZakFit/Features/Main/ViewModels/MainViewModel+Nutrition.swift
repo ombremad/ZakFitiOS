@@ -134,26 +134,6 @@ extension MainViewModel {
         }
     }
     
-//    func fetchFoodTypes(mealType: MealType, restrictionTypes: [RestrictionType]?) async {
-//        errorMessage = ""
-//
-//        do {
-//            isLoading = true
-//
-//            let response: [FoodTypeResponse] = try await NetworkService.shared.get(
-//                endpoint: "/foodTypes",
-//                requiresAuth: true
-//            )
-//            foodTypes = response.map { $0.toModel() }
-//            print("Successfully fetched food types")
-//
-//            isLoading = false
-//        } catch {
-//            print("Error fetching food types: \(error)")
-//            isLoading = false
-//        }
-//    }
-//    
     func addFoodItem(mealType: MealType, foodType: FoodType?, weight: Int?, quantity: Int?) -> Bool {
         var actualWeight: Int? = weight
         
@@ -179,6 +159,8 @@ extension MainViewModel {
         guard validateMealForm(cals: cals) else { return false }
         
         let mealRequest = MealRequest(date: date, cals: cals, carbs: carbs, fats: fats, prots: prots, mealTypeId: mealType.id, foods: nutrition.foods.map { $0.toRequest() })
+        
+        print(mealRequest)
 
         do {
             isLoading = true
@@ -250,7 +232,7 @@ extension MainViewModel {
     func validateMealForm(cals: Int) -> Bool {
         errorMessage = ""
         
-        if nutrition.meals.isEmpty {
+        if nutrition.foods.isEmpty {
             errorMessage = "Vous devez ajouter au moins un aliment à votre repas."
             return false
         }
