@@ -75,7 +75,7 @@ struct NutritionGoalView: View {
                             )
                             .padding(.trailing, 16)
                         }
-                        VStack {
+                        VStack(alignment: .trailing) {
                             HStack(alignment: .bottom) {
                                 Text(vm.nutritionGoals.carbsPercentage.description)
                                     .font(.cardData)
@@ -84,7 +84,9 @@ struct NutritionGoalView: View {
                                     .font(.cardUnit)
                                     .offset(y: -5)
                             }
-                            Text(vm.nutritionGoals.carbsDaily.description + " cal")
+                            Text(vm.nutritionGoals.carbsDaily.description + " kcal")
+                                .font(.callout)
+                                .foregroundStyle(Color.Label.tertiary)
                         }
                     }
                 }
@@ -101,7 +103,7 @@ struct NutritionGoalView: View {
                             )
                             .padding(.trailing, 16)
                         }
-                        VStack {
+                        VStack(alignment: .trailing) {
                             HStack(alignment: .bottom) {
                                 Text(vm.nutritionGoals.fatsPercentage.description)
                                     .font(.cardData)
@@ -110,7 +112,9 @@ struct NutritionGoalView: View {
                                     .font(.cardUnit)
                                     .offset(y: -5)
                             }
-                            Text(vm.nutritionGoals.fatsDaily.description + " cal")
+                            Text(vm.nutritionGoals.fatsDaily.description + " kcal")
+                                .font(.callout)
+                                .foregroundStyle(Color.Label.tertiary)
                         }
                     }
                 }
@@ -127,7 +131,7 @@ struct NutritionGoalView: View {
                             )
                             .padding(.trailing, 16)
                         }
-                        VStack {
+                        VStack(alignment: .trailing) {
                             HStack(alignment: .bottom) {
                                 Text(vm.nutritionGoals.protsPercentage.description)
                                     .font(.cardData)
@@ -136,7 +140,9 @@ struct NutritionGoalView: View {
                                     .font(.cardUnit)
                                     .offset(y: -5)
                             }
-                            Text(vm.nutritionGoals.protsDaily.description + " cal")
+                            Text(vm.nutritionGoals.protsDaily.description + " kcal")
+                                .font(.callout)
+                                .foregroundStyle(Color.Label.tertiary)
                         }
                     }
                 }

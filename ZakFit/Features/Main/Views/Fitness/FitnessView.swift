@@ -53,7 +53,9 @@ struct FitnessView: View {
                 .padding()
             }
             .task {
-                await vm.fetchExerciseTypes()
+                if vm.fitness.exerciseTypes.isEmpty {
+                    await vm.fetchExerciseTypes()
+                }
                 await vm.fetchExercises(days: 3)
             }
             

@@ -48,6 +48,7 @@ extension MainViewModel {
             
             print("Successfully patched user \(user.email ?? "undefined")")
             dashboard.needsUserRefresh = true
+            dashboard.needsMacronutrientRefresh = true
             isLoading = false
             
         } catch let error as NetworkError {
