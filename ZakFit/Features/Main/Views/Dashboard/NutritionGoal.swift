@@ -164,9 +164,8 @@ struct NutritionGoal: View {
                     
                     programSelection
                     macronutrientsValues
-                    Text(vm.errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(Color.Label.secondary)
+                    
+                    ErrorMessage(message: vm.errorMessage)
                     
                 }
                 .padding()

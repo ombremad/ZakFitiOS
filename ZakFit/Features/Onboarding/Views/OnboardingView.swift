@@ -348,12 +348,7 @@ struct OnboardingView: View {
                     .animation(.easeInOut(duration: 0.3), value: vm.currentStep)
                     
                     // Error message
-                    if !vm.errorMessage.isEmpty {
-                        Text(vm.errorMessage)
-                            .foregroundStyle(Color.Label.secondary)
-                            .font(.callout)
-                            .multilineTextAlignment(.center)
-                    }
+                    ErrorMessage(message: vm.errorMessage)
                     
                     // Progress indicator
                     HStack(spacing: 8) {

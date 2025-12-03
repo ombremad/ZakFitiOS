@@ -78,9 +78,8 @@ struct NewMealView: View {
                     .onTapGesture {
                         showCalendar = true
                     }
-                    Text(vm.errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(Color.Label.secondary)
+                    ErrorMessage(message: vm.errorMessage)
+
                 }
                 
             }

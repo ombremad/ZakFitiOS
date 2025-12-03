@@ -71,9 +71,7 @@ struct FoodSelectionView: View {
             }
         }
         VStack {
-            Text(vm.errorMessage)
-                .font(.caption)
-                .foregroundStyle(Color.Label.secondary)
+            ErrorMessage(message: vm.errorMessage)
         }
     }
 

@@ -63,12 +63,7 @@ struct LoginView: View {
                                     }
                             }
                             
-                            if !vm.errorMessage.isEmpty {
-                                Text(vm.errorMessage)
-                                    .foregroundStyle(Color.Label.secondary)
-                                    .font(.callout)
-                                    .multilineTextAlignment(.center)
-                            }
+                            ErrorMessage(message: vm.errorMessage)
                         }
                     }
                     
