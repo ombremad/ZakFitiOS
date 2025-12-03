@@ -50,21 +50,25 @@ struct DashboardView: View {
     }
     private var programButtons: some View {
         HStack {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Définir mon programme")
-                        .font(.cardTitle)
-                        .foregroundStyle(Color.Label.vibrant)
-                    Text("diététique")
-                        .font(.cardBigTitle)
-                        .foregroundStyle(Color.Label.secondary)
+            NavigationLink {
+                NutritionGoal().environment(vm)
+            } label : {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Définir mon programme")
+                            .font(.cardTitle)
+                            .foregroundStyle(Color.Label.vibrant)
+                        Text("diététique")
+                            .font(.cardBigTitle)
+                            .foregroundStyle(Color.Label.secondary)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(LinearGradient.accent)
+                .cornerRadius(25)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(LinearGradient.accent)
-            .cornerRadius(25)
 
             HStack {
                 VStack(alignment: .leading) {

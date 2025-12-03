@@ -9,6 +9,7 @@ import Foundation
 
 extension MainViewModel {
     func fetchUserData() async {
+        dashboard.needsUserRefresh = false
         isLoading = true
         do {
             let userResponse: UserResponse = try await NetworkService.shared.get(
@@ -16,7 +17,7 @@ extension MainViewModel {
                 requiresAuth: true
             )
             user = User(from: userResponse)
-            print("Successfully fetched user data for user \(user.firstName ?? "undefined") \(user.lastName ?? "undefined")")
+            print("Successfully fetched user data for user \(user.email ?? "undefined")")
         } catch {
             print("Error fetching user data: \(error)")
         }
@@ -27,7 +28,7 @@ extension MainViewModel {
         do {
             try AuthManager.shared.logout()
             user = User()
-            print("User logged out successfully")
+            print("Successfully logged out")
         } catch {
             print("Error logging out: \(error.localizedDescription)")
         }

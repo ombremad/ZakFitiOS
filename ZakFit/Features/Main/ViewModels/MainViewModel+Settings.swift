@@ -38,6 +38,7 @@ extension MainViewModel {
             )
             
             user = User(from: userResponse)
+            print("Successfully patched user \(user.email ?? "undefined")")
             
         } catch let error as NetworkError {
             errorMessage = error.localizedDescription

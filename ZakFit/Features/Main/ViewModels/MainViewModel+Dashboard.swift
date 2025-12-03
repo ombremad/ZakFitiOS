@@ -9,7 +9,7 @@ import Foundation
 
 extension MainViewModel {
     func fetchDashboardData() async {
-        if user.id == nil {
+        if user.id == nil || dashboard.needsUserRefresh {
             await fetchUserData()
         }
         if dashboard.calsToday == nil || dashboard.needsMacronutrientRefresh == true {
