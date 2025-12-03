@@ -191,6 +191,7 @@ struct NutritionGoalView: View {
                 }
             }
 
+            .scrollDismissesKeyboard(.immediately)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {

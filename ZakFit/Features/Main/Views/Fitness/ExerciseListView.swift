@@ -228,6 +228,7 @@ struct ExerciseListView: View {
                 .sharedBackgroundVisibility(.hidden)
             }
             
+            .scrollDismissesKeyboard(.immediately)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {

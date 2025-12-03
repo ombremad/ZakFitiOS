@@ -71,6 +71,7 @@ struct MealDetailView: View {
                 .sharedBackgroundVisibility(.hidden)
             }
             
+            .scrollDismissesKeyboard(.immediately)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {

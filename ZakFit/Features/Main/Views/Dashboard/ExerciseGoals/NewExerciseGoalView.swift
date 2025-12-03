@@ -122,7 +122,6 @@ struct NewExerciseGoalView: View {
                 await vm.initNewExerciseGoal()
             }
             
-            .scrollDismissesKeyboard(.immediately)
             .toolbar {
                 ToolbarItem(placement: .title) {
                     Text("Nouvel entraînement")
@@ -143,6 +142,7 @@ struct NewExerciseGoalView: View {
                 }
             }
 
+            .scrollDismissesKeyboard(.immediately)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {

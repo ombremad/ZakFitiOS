@@ -79,6 +79,7 @@ struct NutritionView: View {
                 }
             }
             
+            .scrollDismissesKeyboard(.immediately)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
