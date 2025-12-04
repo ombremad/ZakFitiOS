@@ -12,7 +12,10 @@ struct LoginView: View {
 
     // form values
     @State private var formData = LoginFormData()
-        
+    
+    // UX values
+    @FocusState private var focusedField: Field?
+    enum Field { case firstName, lastName, email, password, passwordConfirmation }
     
     var body: some View {
         NavigationStack {
@@ -31,19 +34,23 @@ struct LoginView: View {
                                 TextField("Prénom", text: $formData.firstName)
                                     .textContentType(.givenName)
                                     .submitLabel(.next)
+                                    .focused($focusedField, equals: .firstName)
                                 TextField("Nom", text: $formData.lastName)
                                     .textContentType(.familyName)
                                     .submitLabel(.next)
+                                    .focused($focusedField, equals: .lastName)
                             }
                             TextField("E-mail", text: $formData.email)
                                 .textInputAutocapitalization(.never)
                                 .keyboardType(.emailAddress)
                                 .textContentType(.emailAddress)
                                 .submitLabel(.next)
+                                .focused($focusedField, equals: .email)
                             
                             SecureField("Mot de passe", text: $formData.password)
                                 .textContentType(vm.formState == .login ? .password : .newPassword)
-                                .submitLabel(vm.formState == .login ? .go : .next)
+                                .submitLabel(vm.formState == .login ? .send : .next)
+                                .focused($focusedField, equals: .password)
                                 .onSubmit {
                                     if vm.formState == .login {
                                         Task {
@@ -55,10 +62,13 @@ struct LoginView: View {
                             if vm.formState == .signup {
                                 SecureField("Confirmer le mot de passe", text: $formData.passwordConfirmation)
                                     .textContentType(.newPassword)
-                                    .submitLabel(.go)
+                                    .submitLabel(.send)
+                                    .focused($focusedField, equals: .passwordConfirmation)
                                     .onSubmit {
-                                        Task {
-                                            await vm.signup(formData: formData)
+                                        if vm.formState == .signup {
+                                            Task {
+                                                await vm.signup(formData: formData)
+                                            }
                                         }
                                     }
                             }
@@ -106,6 +116,9 @@ struct LoginView: View {
             .background {
                 LinearGradient.primary
                     .ignoresSafeArea()
+                    .onTapGesture {
+                        focusedField = nil
+                    }
             }
         }
     }
