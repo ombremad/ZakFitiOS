@@ -11,7 +11,7 @@ struct NutritionView: View {
     @Environment(MainViewModel.self) var vm
     
     private var nutrientsIntake: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Apports journaliers")
                 .font(.title2)
                 .foregroundStyle(Color.Label.primary)
@@ -43,6 +43,20 @@ struct NutritionView: View {
             }
             .padding()
             .glassEffect(.regular.tint(.clear), in: .rect(cornerRadius: 25))
+        }
+    }
+    private var nutrientsRepartition: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Répartition")
+                .font(.title2)
+                .foregroundStyle(Color.Label.primary)
+            
+            NutrientsTable(
+                cals: vm.dashboard.calsToday ?? 0,
+                carbs: vm.dashboard.carbsToday ?? 0,
+                fats: vm.dashboard.fatsToday ?? 9,
+                prots: vm.dashboard.protsToday ?? 0
+            )
         }
     }
     private var mealsToday: some View {
@@ -88,6 +102,7 @@ struct NutritionView: View {
                 VStack(alignment: .leading, spacing: 36) {
                     
                     nutrientsIntake
+                    nutrientsRepartition
                     mealsToday
                     
                 }

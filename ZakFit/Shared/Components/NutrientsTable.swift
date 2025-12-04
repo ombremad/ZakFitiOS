@@ -57,7 +57,7 @@ struct NutrientsTable: View {
                 .font(.cardCaption)
             }
             NutrientsDonutChart(carbs: carbs, fats: fats, prots: prots)
-                .frame(width: 100, height: 100)
+                .frame(width: 90, height: 90)
         }
         .foregroundStyle(Color.Label.secondary)
         .lineLimit(1)
