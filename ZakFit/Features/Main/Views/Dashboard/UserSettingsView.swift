@@ -27,13 +27,13 @@ struct UserSettingsView: View {
             
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Text(vm.user.firstName ?? "undefined")
-                    Text(vm.user.lastName ?? "undefined")
+                    Text(vm.user.firstName ?? "")
+                    Text(vm.user.lastName ?? "")
                 }
                 .font(.cardSubheader)
                 .foregroundStyle(Color.Label.primary)
 
-                Text(vm.user.email ?? "undefined")
+                Text(vm.user.email ?? "")
                     .font(.callout2)
                     .foregroundStyle(Color.Label.secondary)
             }
@@ -288,12 +288,15 @@ struct UserSettingsView: View {
                 }
             }
             
-            .scrollDismissesKeyboard(.immediately)
+            .scrollDismissesKeyboard(.interactively)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 Color.App.background
                     .ignoresSafeArea()
+                    .onTapGesture {
+                        focusedField = nil
+                    }
             }
         }
     }

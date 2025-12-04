@@ -135,7 +135,7 @@ struct DashboardView: View {
                         UserSettingsView().environment(vm)
                     } label: {
                     HStack {
-                        Text(vm.user.firstName ?? "undefined")
+                        Text(vm.user.firstName ?? "")
                         Image(systemName: "person.crop.circle")
                             .resizable()
                             .aspectRatio(contentMode: .fit)

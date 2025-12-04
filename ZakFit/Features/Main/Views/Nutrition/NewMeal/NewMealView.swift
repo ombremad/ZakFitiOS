@@ -38,13 +38,17 @@ struct NewMealView: View {
             ZStack {
                 
                 VStack {
-                    ForEach(vm.nutrition.mealTypes) { mealType in
-                        MealTypeRow(name: mealType.name, isSelected: selectedMealType == mealType)
-                            .onTapGesture {
-                                withAnimation {
-                                    selectedMealType = mealType
+                    if vm.isLoading {
+                        ProgressView()
+                    } else {
+                        ForEach(vm.nutrition.mealTypes) { mealType in
+                            MealTypeRow(name: mealType.name, isSelected: selectedMealType == mealType)
+                                .onTapGesture {
+                                    withAnimation {
+                                        selectedMealType = mealType
+                                    }
                                 }
-                            }
+                        }
                     }
                     Spacer()
                 }
@@ -110,7 +114,7 @@ struct NewMealView: View {
                 get: { vm.nutrition.shouldNavigateToFoodSelection },
                 set: { vm.nutrition.shouldNavigateToFoodSelection = $0 }
             )) {
-                FoodSelectionView(mealType: selectedMealType ?? MealType(id: UUID(), name: "undefined"), date: date).environment(vm)
+                FoodSelectionView(mealType: selectedMealType ?? MealType(id: UUID(), name: ""), date: date).environment(vm)
             }
             
             .navigationBarTitleDisplayMode(.inline)

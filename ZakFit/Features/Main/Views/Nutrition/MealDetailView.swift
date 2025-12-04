@@ -13,7 +13,7 @@ struct MealDetailView: View {
     
     var mealOverview: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text(vm.nutrition.meal.date?.formatted(.dateTime) ?? "undefined")
+            Text(vm.nutrition.meal.date?.formatted(.dateTime) ?? "")
                 .font(.caption)
                 .foregroundStyle(Color.Label.secondary)
             NutrientsTable(
@@ -64,7 +64,7 @@ struct MealDetailView: View {
             
             .toolbar {
                 ToolbarItem(placement: .title) {
-                    Text(vm.nutrition.meal.mealType?.name ?? "undefined")
+                    Text(vm.nutrition.meal.mealType?.name ?? "")
                         .font(.smallTitle)
                         .foregroundStyle(Color.Label.primary)
                 }

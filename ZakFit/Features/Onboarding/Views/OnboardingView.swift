@@ -397,6 +397,9 @@ struct OnboardingView: View {
             .background {
                 LinearGradient.accent
                     .ignoresSafeArea()
+                    .onTapGesture {
+                        focusedField = nil
+                    }
             }
         }
     }

@@ -142,12 +142,15 @@ struct NewExerciseGoalView: View {
                 }
             }
 
-            .scrollDismissesKeyboard(.immediately)
+            .scrollDismissesKeyboard(.interactively)
             .navigationBarTitleDisplayMode(.inline)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background {
                 Color.App.background
                     .ignoresSafeArea()
+                    .onTapGesture {
+                        focusedField = nil
+                    }
             }
             
         }
