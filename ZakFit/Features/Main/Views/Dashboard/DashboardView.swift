@@ -14,7 +14,7 @@ struct DashboardView: View {
         VStack(spacing: 24) {
                 NutrientDonutPercentage(
                     amount: vm.dashboard.calsToday ?? 0,
-                    total: vm.user.goalCals ?? 9,
+                    total: vm.user.goalCals ?? 0,
                     gradient: LinearGradient.tropical,
                     title: "Calories consommées"
                 )

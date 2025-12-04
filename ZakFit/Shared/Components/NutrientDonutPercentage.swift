@@ -15,12 +15,7 @@ struct NutrientDonutPercentage: View {
     var color: Color? = nil
     let title: String
     var isMini: Bool = false
-    
-    private var percentage: Double {
-        guard total > 0 else { return 0 }
-        return (Double(amount) / Double(total)) * 100
-    }
-    
+        
     private var remaining: Int {
         max(0, total - amount)
     }
@@ -47,7 +42,7 @@ struct NutrientDonutPercentage: View {
             ])
             .chartBackground { _ in
                 HStack(alignment: .bottom, spacing: 4) {
-                    Text(String(format: "%.0f", percentage))
+                    Text(calculatePercentage(from: amount, relativeTo: total).description)
                         .font(isMini ? .cardDataSmall : .cardData)
                         .foregroundStyle(Color.Label.secondary)
                     Text("%")

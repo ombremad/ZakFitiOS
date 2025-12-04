@@ -103,6 +103,7 @@ struct FoodSelectionView: View {
                     Button("Valider", systemImage: "checkmark") {
                         Task {
                             if await vm.addMeal(mealType: mealType, date: date, cals: totalCals, carbs: totalCarbs, fats: totalFats, prots: totalProts) {
+                                await vm.fetchDashboardData()
                                 dismiss()
                             }
                         }
