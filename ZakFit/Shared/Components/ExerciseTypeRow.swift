@@ -17,6 +17,7 @@ struct ExerciseTypeRow: View {
         HStack {
             Image(systemName: icon)
                 .font(.system(size: 17))
+                .frame(width: 24, alignment: .leading)
             Text(name)
                 .font(.listLabel)
             Spacer()
@@ -33,7 +34,7 @@ struct ExerciseTypeRow: View {
 
 #Preview {
     VStack {
-        ExerciseTypeRow(name: "Yoga", icon: "figure.yoga", level: 2)
+        ExerciseTypeRow(name: "Natation", icon: "figure.pool.swim", level: 2)
         ExerciseTypeRow(name: "Yoga", icon: "figure.yoga", level: 2, isSelected: true)
     }
 }

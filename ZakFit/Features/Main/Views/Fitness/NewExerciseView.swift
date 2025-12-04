@@ -42,9 +42,9 @@ struct NewExerciseView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal)
                     }
                     .padding()
+                    .padding(.bottom, 128)
                 }
                 VStack {
                     Spacer()
